@@ -1,0 +1,9 @@
+
+build
+solver/build
+
+moc_*
+*un~
+*.swp
+*.o
+
