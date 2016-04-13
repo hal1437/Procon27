@@ -11,11 +11,13 @@ bool Polygon::addNode(const Point& p){
 //正規化
 bool Polygon::normalize(){
 	//第一頂点を原点とし、第二頂点を(1,0)方向へ回転させる
+	return 0;
 }
 
 //面積算出
 double Polygon::getArea()const{
 	//ググって探す
+	return 0;
 }
 
 //頂点抽出

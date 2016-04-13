@@ -76,4 +76,8 @@ _Point<Type>& _Point<Type>::operator/=(const Type& rhs)const{
 }
 
 
+template <class Type>
+void _Point<Type>::Print(std::ostream& ost)const{
+	ost << "(" << x << "," << y << ")";
+}
 

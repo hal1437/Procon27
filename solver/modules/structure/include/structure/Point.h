@@ -1,9 +1,10 @@
 
 #pragma once
+#include <util/Printable.h>
 
 //二次元座標クラス
 template <class Type>
-class _Point{
+class _Point : public Printable{
 public:
 	Type x;
 	Type y;
@@ -27,6 +28,7 @@ public:
 	_Point& operator*=(const Type& rhs)const;
 	_Point& operator/=(const Type& rhs)const;
 
+	virtual void Print(std::ostream& ost)const;
 
 };
 

@@ -20,8 +20,7 @@ int main(){
 	polygon.addNode(p4);
 
 	for(int i=0;i<4;i++){
-		Point pp = polygon.getNode(i);
-		std::cout << pp.x <<  "," << pp.y << std::endl;
+		std::cout << polygon.getNode(i) << std::endl;
 	}
 
 }

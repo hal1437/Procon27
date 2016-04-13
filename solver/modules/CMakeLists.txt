@@ -1,8 +1,8 @@
 
 # サブディレクトリの追加
-# add_subdirectory(search)
+add_subdirectory(util)
 add_subdirectory(structure)
-# add_subdirectory(util)
+# add_subdirectory(search)
 
 # Qt5導入時はUIもビルドする
 if(Qt5Widgets_FOUND)
