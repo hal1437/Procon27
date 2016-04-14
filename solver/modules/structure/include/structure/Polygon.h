@@ -2,10 +2,11 @@
 #pragma once
 
 #include <structure/Point.hpp>
+#include <util/Printable.h>
 #include <vector>
 
 //多角形クラス
-class Polygon{
+class Polygon:public Printable{
 protected:
 
 	std::vector<Point> v; //頂点座標
@@ -24,6 +25,9 @@ public:
 	Point getNode(int index)const;
 	//頂点設定
 	bool setNode(int index,const Point& pos);
+
+	//出力
+	virtual void Print(std::ostream& ost)const;
 
 };
 

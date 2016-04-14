@@ -41,5 +41,12 @@ bool Polygon::setNode(int index,const Point& pos){
 		return true;
 	}
 }
+void Polygon::Print(std::ostream& ost)const{
+	ost << "vertex:" << this->v.size() << std::endl;
+	for(int i=0;i<this->v.size();i++){
+		ost << i << "." << v[i] << std::endl;
+	}
+}
+
 
 

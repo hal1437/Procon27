@@ -19,8 +19,6 @@ int main(){
 	polygon.addNode(p3);
 	polygon.addNode(p4);
 
-	for(int i=0;i<4;i++){
-		std::cout << polygon.getNode(i) << std::endl;
-	}
+	std::cout << polygon << std::endl;
 
 }
