@@ -22,9 +22,13 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1y")        # C++14を有効化
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-type-limits")  # disable some warnings
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")     # enable all SSE and AVX
 
+# OpenCVのパッケージ検索
+set(CMAKE_PREFIX_PATH /usr/local/opt/qt5)
+# set(OpenCV_DIR /usr/local/Cellar/opencv3)
+set(CMAKE_PREFIX_PATH "${CMAKE_MODULE_PATH}" "/usr/local/opt/opencv3")
+find_package( OpenCV REQUIRED)
 
 # Qt5存在確認
-set(CMAKE_PREFIX_PATH /usr/local/opt/qt5)
 find_package(Qt5Widgets)
 if(Qt5Widgets_FOUND)
   message(STATUS "Found 'Qt5 library' ${Qt5Widgets_VERSION}")
