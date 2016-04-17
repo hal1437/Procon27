@@ -25,13 +25,19 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1y")        # C++14を有効化
 # OpenCVのパッケージ検索
 set(CMAKE_PREFIX_PATH /usr/local/opt/qt5)
 # set(OpenCV_DIR /usr/local/Cellar/opencv3)
-set(CMAKE_PREFIX_PATH "${CMAKE_MODULE_PATH}" "/usr/local/opt/opencv3")
+# set(CMAKE_PREFIX_PATH "${CMAKE_MODULE_PATH}" "/usr/local/opt/opencv3")
 find_package( OpenCV REQUIRED)
+
+MESSAGE(STATUS "Found 'OpenCV' : ${OpenCV_VERSION}")
+if(${OpenCV_VERSION} VERSION_LESS 3.0)
+#   MESSAGE(FATAL_ERROR "OpenCV version is required : 3.0")
+endif()
+
 
 # Qt5存在確認
 find_package(Qt5Widgets)
 if(Qt5Widgets_FOUND)
-  message(STATUS "Found 'Qt5 library' ${Qt5Widgets_VERSION}")
+  message(STATUS "Found 'Qt5 library' : ${Qt5Widgets_VERSION}")
 else()
   message(STATUS "Notfound 'Qt5 library'")
 endif()
