@@ -3,11 +3,7 @@
 #include <iostream>
 
 
-//頂点追加
-bool Polygon::addNode(const Point& p){
-	this->v.push_back(p);
-	return true;
-}
+
 //正規化
 bool Polygon::normalize(){
 	//第一頂点を原点とし、第二頂点を(1,0)方向へ回転させる
@@ -20,6 +16,12 @@ double Polygon::getArea()const{
 	return 0;
 }
 
+
+//頂点追加
+size_t Polygon::size()const{
+	return this->v.size();
+}
+
 //頂点抽出
 Point Polygon::getNode(int index)const{
 	if(index < 0 || this->v.size() <= index){
@@ -30,6 +32,11 @@ Point Polygon::getNode(int index)const{
 		return this->v[index];
 	}
 
+}
+//頂点追加
+bool Polygon::addNode(const Point& p){
+	this->v.push_back(p);
+	return true;
 }
 //頂点設定
 bool Polygon::setNode(int index,const Point& pos){

@@ -13,14 +13,15 @@ protected:
 
 public:
 
-	//頂点追加
-	bool addNode(const Point& p);
 	//正規化
 	bool normalize();
-
 	//面積算出
 	double getArea()const;
-	
+
+	//頂点数取得
+	size_t size()const;
+	//頂点追加
+	bool addNode(const Point& p);
 	//頂点抽出
 	Point getNode(int index)const;
 	//頂点設定
