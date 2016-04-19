@@ -1,19 +1,34 @@
 
 #include <iostream>
+#include <structure/Point.hpp>
+#include <structure/Polygon.h>
+#include <structure/Drawer.h>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/ml/ml.hpp>
+#include <random>
+
 
 int main(){
 	
 	cv::Mat img = cv::Mat::zeros(500, 500, CV_8UC3);
 
-	// Red，太さ3，4近傍連結
-	cv::line(img, cv::Point(100, 100), cv::Point(400, 105), cv::Scalar(0,0,200), 3, 4);  
-	// Green，太さ5，8近傍連結
-	cv::line(img, cv::Point(100, 200), cv::Point(400, 205), cv::Scalar(0,200,0), 5, 8);
-	// Blue，太さ10，アンチエイリアス
-	cv::line(img, cv::Point(100, 300), cv::Point(400, 305), cv::Scalar(200,0,0), 10, CV_AA);
+	std::random_device rd;
+
+	Point p1(10,20);
+	Point p2(rd()%300,rd()%300);
+	Point p3(rd()%300,rd()%300);
+	Point p4(rd()%300,rd()%300);
+	Polygon polygon;
+
+	polygon.addNode(p1);
+	polygon.addNode(p2);
+	polygon.addNode(p3);
+	polygon.addNode(p4);
+
+
+	std::cout << polygon << std::endl;
+	img << polygon;
 
 	cv::namedWindow("drawing", CV_WINDOW_AUTOSIZE|CV_WINDOW_FREERATIO);
 	cv::imshow("drawing", img);
