@@ -1,11 +1,11 @@
 
 #pragma once
-#include <structure/Polygon.hpp>
+#include <structure/Polygon.h>
 #include <string>
 
 
 //問題クラス
-class Porblem{
+class Problem{
 public:
 	Polygon frame;
 	std::vector<Polygon> pieces;
