@@ -8,16 +8,19 @@
 //cv::Matに出力
 bool DrawPolygon(cv::Mat& src,const Polygon& poly,int thickness = 1 , const cv::Scalar& color = cv::Scalar(255,255,255),bool fill = true){
 
+	cv::Point* pos = new cv::Point[poly.size()];
+	cv::Point** poss = &pos;
 	for(int i=0; i<poly.size(); i++){
-		int j = (i+1)%poly.size();
-		cv::Point pos1(poly.getNode(i).x,poly.getNode(i).y);
-		cv::Point pos2(poly.getNode(j).x,poly.getNode(j).y);
-		cv::line(src,pos1,pos2,color,thickness);
+		pos[i] = cv::Point(poly.getNode(i).x,poly.getNode(i).y);
+		std::cout << pos[i].x << "," << pos[i].y << std::endl;
 	}
+	
+	cv::fillConvexPoly(src,pos,poly.size(),color);
+	delete[] pos;
 	return true;
 }
-bool DrawPoint(cv::Mat& src,const Point& pos,int radius = 5 , const cv::Scalar& color = cv::Scalar(255,255,255),bool fill = true){
-	circle(src,cv::Point(pos.x, pos.y), 1,color , 1, 8, 0);
+bool DrawPoint(cv::Mat& src,const Point& pos,int radius = 3 , const cv::Scalar& color = cv::Scalar(255,255,255),int thickness = 1 ,bool fill = true){
+	cv::circle(src,cv::Point(pos.x, pos.y), radius,color , thickness, 8, 0);
 	return true;
 }
 
