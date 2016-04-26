@@ -2,8 +2,8 @@
 message(STATUS "Added the following executables:")
 
 add_executable(hello hello.cpp)
-message(STATUS "  hello")
 target_link_libraries(hello util)
+message(STATUS "  hello")
 
 add_executable(graph graph.cpp)
 target_link_libraries(graph structure)
@@ -16,6 +16,7 @@ message(STATUS "  opencv_test")
 
 add_executable(capture_test capture_test.cpp)
 target_link_libraries(capture_test ${OpenCV_LIBS})
+target_link_libraries(capture_test util)
 message(STATUS "  capture_test")
 
 
