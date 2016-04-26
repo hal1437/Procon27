@@ -1,6 +1,7 @@
 
 #pragma once
 #include <util/Printable.h>
+#include <cmath>
 
 //二次元座標クラス
 template <class Type>
@@ -27,6 +28,17 @@ public:
 	_Point& operator-=(const Type& rhs)const;
 	_Point& operator*=(const Type& rhs)const;
 	_Point& operator/=(const Type& rhs)const;
+
+	//正規化
+	bool Norm();
+	_Point getNorm();
+
+	//大きさの取得
+	double size()const;
+	//内積
+	double innerProduct(const _Point<Type>& rhs)const;
+	//角度
+	double angle(const _Point<Type>& rhs)const;
 
 	virtual void Print(std::ostream& ost)const;
 

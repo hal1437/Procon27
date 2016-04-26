@@ -77,6 +77,36 @@ _Point<Type>& _Point<Type>::operator/=(const Type& rhs)const{
 
 
 template <class Type>
+bool _Point<Type>::Norm(){
+	if(this->x == 0 && this->y ==0)return false;
+	else{
+		this->x = this->x / this->size();
+		this->y = this->y / this->size();
+		return true;
+	}
+}
+template <class Type>
+_Point<Type> _Point<Type>::getNorm(){
+	_Point<Type> answer(*this);
+	answer.Norm();
+	return answer;
+}
+
+template <class Type>
+double _Point<Type>::size()const{
+	return std::sqrt(std::pow(this->x,2) + std::pow(this->y,2));
+}
+template <class Type>
+double _Point<Type>::innerProduct(const _Point<Type>& rhs)const{
+	return this->x * rhs.x + this->y * rhs.y;
+}
+template <class Type>
+double _Point<Type>::angle(const _Point<Type>& rhs)const{
+	double answer = std::acos(this->InnerProduct(rhs)/(this->size()*rhs.size()));
+	return answer;
+}
+
+template <class Type>
 void _Point<Type>::Print(std::ostream& ost)const{
 	ost << "(" << x << "," << y << ")";
 }
