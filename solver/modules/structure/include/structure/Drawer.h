@@ -35,4 +35,3 @@ cv::Mat& operator<<(cv::Mat& src,const Point& pos){
 	return src;
 }
 
-

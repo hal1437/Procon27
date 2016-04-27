@@ -10,7 +10,6 @@
 
 int main(){
 	
-
 	Point p[5];
 	std::random_device rd;
 // 	p[0] = Point(rd()%300,rd()%300);
