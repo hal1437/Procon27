@@ -4,12 +4,12 @@
 template <class T>
 class Range{
 public:
-	T maximum;
-	T minimum;
+	T max;
+	T min;
 
 public:
 
-	Range(const T& max,const T& min):maximum(max),minimum(min){
+	Range(const T& Max,const T& Min):max(Max),min(Min){
 	}
 
 	decltype(maximum-minimum) diff()const{
