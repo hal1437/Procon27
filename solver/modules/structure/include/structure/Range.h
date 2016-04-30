@@ -12,8 +12,8 @@ public:
 	Range(const T& Max,const T& Min):max(Max),min(Min){
 	}
 
-	decltype(maximum-minimum) diff()const{
-		return maximum-minimum;
+	decltype(max-min) diff()const{
+		return max-min;
 	}
 
 };
