@@ -18,13 +18,14 @@ Problem ProblemMaker::MakeEqualAreaProblem(){
 	return prob;
 }
 
-Problem ProblemMaker::MakeRandomProblem(){
+Problem ProblemMaker::MakeTriangleProblem(){
 	Problem prob;
 	std::random_device rd;
 
 	const Range<_Point<int>> frame_range   (_Point<int>(400,400),_Point<int>(300,300));  //フレーム生成範囲
-	const Range<int>   edge_div_range(3,2);                            //辺上の頂点の生成数範囲
+	const Range<int>   edge_div_range(6,4);                            //辺上の頂点の生成数範囲
 	const int edge_div_round = 10;                                     //辺上の頂点の揺らぎ
+	const int density = 80;
 
 	const int frame_width  = rd() % frame_range.diff().x  + frame_range.min.y;//枠の幅
 	const int frame_height = rd() % frame_range.diff().y  + frame_range.min.x;//枠の高さ
@@ -61,7 +62,6 @@ Problem ProblemMaker::MakeRandomProblem(){
 			Point next = points[v] + (base * i / times)  + round_p;
 			points.push_back(next);
 			if(i!=1){
-				std::cout << "made joint " << points.size()-2 <<" to " << points.size()-1 << std::endl;
 				pairs.push_back(std::make_pair(points.size()-2,points.size()-1));
 			}else{
 				pairs.push_back(std::make_pair(joint_cc,points.size()-1));
@@ -75,7 +75,7 @@ Problem ProblemMaker::MakeRandomProblem(){
 
 	//領域内に適当に点を追加
 	std::cout << "構成頂点を作成..." << std::flush;
-	int private_radius = 80; //点同士の半径
+	int private_radius = density; //点同士の半径
 	int retake = 100; //リセット回数
 	int tryal = 0;    //生成失敗回数
 	std::vector<Point> tmp = points;
@@ -195,8 +195,9 @@ Problem ProblemMaker::MakeRandomProblem(){
 		}
 	}
 	
-	std::cout << "完了:ピース数" << triangles.size() << std::endl;
-
+	std::cout << "完了" << std::endl;
+	std::cout << "生成完了:ピース数" << triangles.size() << std::endl;
+/*
 	//描画
 	cv::Point offsets(40,40);
 	Point offsets_p(offsets.x,offsets.y);
@@ -205,11 +206,35 @@ Problem ProblemMaker::MakeRandomProblem(){
 		          cv::Point(points[l.second].x,points[l.second].y)+offsets,
 		          cv::Scalar( 255, 255, 255 ));
 	}
+	for(auto node:triangles){
+		auto img_c = img.clone();
+		line(img_c, cv::Point(points[std::get<0>(node)].x,points[std::get<0>(node)].y)+offsets,
+		            cv::Point(points[std::get<1>(node)].x,points[std::get<1>(node)].y)+offsets,
+		            cv::Scalar( 255, 0, 0 ));
+		line(img_c, cv::Point(points[std::get<1>(node)].x,points[std::get<1>(node)].y)+offsets,
+		            cv::Point(points[std::get<2>(node)].x,points[std::get<2>(node)].y)+offsets,
+		            cv::Scalar( 255, 0, 0 ));
+		line(img_c, cv::Point(points[std::get<2>(node)].x,points[std::get<2>(node)].y)+offsets,
+		            cv::Point(points[std::get<0>(node)].x,points[std::get<0>(node)].y)+offsets,
+		            cv::Scalar( 255, 0, 0 ));
+		cv::imshow("drawing", img_c);
+		cv::waitKey(0);
+	}
 	for(Point p:points)img << p+offsets_p;
 	cv::namedWindow("drawing", CV_WINDOW_AUTOSIZE|CV_WINDOW_FREERATIO);
 	cv::imshow("drawing", img);
 	cv::imwrite("image.png",img);
 	cv::waitKey(0);
+*/
+	for(auto node:triangles){
+		Polygon poly;
+		
+		poly.addNode(points[std::get<0>(node)]);
+		poly.addNode(points[std::get<1>(node)]);
+		poly.addNode(points[std::get<2>(node)]);
+		
+		prob.pieces.push_back(poly);
+	}
 
 	return prob;
 }

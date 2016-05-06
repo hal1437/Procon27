@@ -11,20 +11,13 @@ int main(){
 	std::cout << "---Graph Algorithm Test---" << std::endl;
 	
 
-	ProblemMaker::MakeRandomProblem();
-	Point p1(10,20);
-	Point p2(20,20);
-	Point p3(20,10);
-	Point p4(10,10);
+	Problem problem = ProblemMaker::MakeTriangleProblem();
 	Polygon polygon;
 
-	polygon.addNode(p1);
-	polygon.addNode(p2);
-	polygon.addNode(p3);
-	polygon.addNode(p4);
-
+	std::cout << "三角問題" << std::endl;
+	for(Polygon p :problem.pieces){
+		std::cout << p;
+	}
 	
-
-	std::cout << polygon << std::endl;
 
 }

@@ -16,6 +16,6 @@ public:
 	//等面積問題作成
 	static Problem MakeEqualAreaProblem();
 	
-	//ランダム問題作成
-	static Problem MakeRandomProblem();
+	//三角問題作成
+	static Problem MakeTriangleProblem();
 };
