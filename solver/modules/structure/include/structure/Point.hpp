@@ -102,7 +102,7 @@ double _Point<Type>::innerProduct(const _Point<Type>& rhs)const{
 }
 template <class Type>
 double _Point<Type>::angle(const _Point<Type>& rhs)const{
-	double answer = std::acos(this->InnerProduct(rhs)/(this->size()*rhs.size()));
+	double answer = std::acos(this->innerProduct(rhs)/(this->size()*rhs.size()));
 	return answer;
 }
 
