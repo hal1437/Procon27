@@ -5,7 +5,9 @@
 #include <random>
 #include <algorithm>
 #include <vector>
+#include <map>
 #include <cmath>
+#include <tuple>
 
 class ProblemMaker{
 private:
