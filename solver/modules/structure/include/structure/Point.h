@@ -46,4 +46,5 @@ public:
 
 //エイリアス定義
 typedef _Point<double> Point;
+typedef _Point<int> Point_i;
 
