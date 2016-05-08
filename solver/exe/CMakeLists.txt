@@ -20,6 +20,9 @@ target_link_libraries(capture_test ${OpenCV_LIBS})
 target_link_libraries(capture_test util)
 message(STATUS "  capture_test")
 
-
+add_executable(matrix matrix.cpp)
+target_link_libraries(matrix structure)
+target_link_libraries(matrix ${OpenCV_LIBS})
+message(STATUS "  matrix")
 
 
