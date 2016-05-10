@@ -1,7 +1,8 @@
 
 #pragma once 
+#include <structure/Point.hpp>
 #include <util/Printable.h>
-
+#include <cmath>
 
 //数学的行列
 template<size_t W,size_t H = W>
@@ -9,6 +10,7 @@ class Matrix:public Printable{
 public:
 	typedef Matrix<W,H> current;   //通常
 	typedef Matrix<H,W> transpose; //転置
+
 public:
 	double _v[W][H]; //成分
 
@@ -16,12 +18,16 @@ public:
 
 	Matrix();//コンストラクタ
 
+	static Matrix<3,1> ConvertMatrix(const Point& p);        //ベクトルを行列に変換
+	static Matrix<3,3> MakeMoveMatrix(double x,double y);    //平行移動行列作成
+	static Matrix<3,3> MakeRotateMatrix(double radius);      //回転移動行列作成
+	static Matrix<3,3> MakeScaleMatrix(double dx,double dy); //拡大行列作成
 	static current MakeIdentityMatrix();//単位行列生成
 	static constexpr bool isSquare(); //正方行列の判定
 
 	double    getDeterminant()const; //行列式取得
 	transpose getTranspose()const;   //転置行列取得
-
+	Point pos()const;
 
 	//演算子定義
 	double  operator()(size_t w,size_t h)const;//抽出
@@ -38,3 +44,7 @@ public:
 
 	virtual void Print(std::ostream& ost)const;
 };
+
+typedef Matrix<3,1> vMat; //ベクトル
+typedef Matrix<3,3> cMat; //変換行列
+

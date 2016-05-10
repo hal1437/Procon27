@@ -12,6 +12,45 @@ Matrix<W,H>::Matrix(){
 }
 
 template<size_t W,size_t H>
+vMat Matrix<W,H>::ConvertMatrix(const Point& p){
+	vMat ans;
+	ans(0,0) = p.x;
+	ans(1,0) = p.y;
+	ans(2,0) = 1.0;
+	return ans;
+}
+
+template<size_t W,size_t H>
+cMat Matrix<W,H>::MakeMoveMatrix(double x,double y){
+	cMat ans;
+	//平行移動
+	ans(0,0) = 1.0;
+	ans(1,1) = 1.0;
+	ans(2,2) = 1.0;
+	ans(0,2) = x;
+	ans(1,2) = y;
+	return ans;
+}
+template<size_t W,size_t H>
+cMat Matrix<W,H>::MakeRotateMatrix(double radius){
+	cMat ans;
+	//回転移動
+	ans(0,0) =  std::cos(radius);ans(1,0) = std::sin(radius);
+	ans(0,1) = -std::sin(radius);ans(1,1) = std::cos(radius);
+	ans(2,2) = 1.0;
+	return ans;
+}
+template<size_t W,size_t H>
+cMat Matrix<W,H>::MakeScaleMatrix(double dx,double dy){
+	cMat ans;
+	//拡大
+	ans(0,0) = dx;
+	ans(1,1) = dy;
+	ans(2,2) = 1.0;
+	return ans;
+}
+
+template<size_t W,size_t H>
 typename Matrix<W,H>::current Matrix<W,H>::MakeIdentityMatrix(){
 	static_assert(isSquare(),"単位行列は行と列が一致しなければなりません。");
 	Matrix<W,H>::current ans;
@@ -101,6 +140,10 @@ Matrix<C,H> Matrix<W,H>::operator*(const Matrix<C,W>& rhs)const{
 }
 
 
+template<size_t W,size_t H>
+Point Matrix<W,H>::pos()const{
+	return Point(_v[0][0],_v[1][0]);
+}
 
 template<size_t W,size_t H>
 void Matrix<W,H>::Print(std::ostream& ost)const{
@@ -116,14 +159,16 @@ void Matrix<W,H>::Print(std::ostream& ost)const{
 	}
 
 	for(int i=0;i<H;i++){
-		if     (i==0  )ost << "┏";
+		if     (H==1  )ost << "(";
+		else if(i==0  )ost << "┏";
 		else if(i==H-1)ost << "┗";
 		else           ost << "┃";
 		for(int j=0;j<W;j++){
 			ost << std::setw(max_width+1) << _v[j][i];
 			if(j!=W-1)ost << ",";
 		}
-		if     (i==0  )ost << "┓\n";
+		if     (H==1  )ost << ")";
+		else if(i==0  )ost << "┓\n";
 		else if(i==H-1)ost << "┛\n";
 		else           ost << "┃\n";
 	}
