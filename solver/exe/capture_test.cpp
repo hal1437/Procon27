@@ -134,7 +134,7 @@ int main(){
 		Console::SetCursorPos(10,9);
 		std::cout << value << "   ";
 		Console::SetCursorPos(10,10);
-		std::cout << key << "   ";
+		std::cout << key << "      ";
 		Console::SetCursorPos(0,20);
 
 		std::cout << std::flush;
@@ -147,5 +147,5 @@ int main(){
 
 
 bool CheckHitKey(int key,char c){
-	return key == (c-'a' + 97);
+	return key == (c-'a' + 1048673);
 }
