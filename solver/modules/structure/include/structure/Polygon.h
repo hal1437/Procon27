@@ -22,6 +22,7 @@ public:
 	size_t size()const;
 	//頂点追加
 	bool addNode(const Point& p);
+	bool addNode(size_t index,const Point& p);
 	//頂点抽出
 	Point getNode(int index)const;
 	//頂点設定

@@ -38,6 +38,10 @@ bool Polygon::addNode(const Point& p){
 	this->v.push_back(p);
 	return true;
 }
+bool Polygon::addNode(size_t index,const Point& p){
+	this->v.insert(v.begin()+index,p);
+	return true;
+}
 //頂点設定
 bool Polygon::setNode(int index,const Point& pos){
 	if(index < 0 || this->v.size() <= index){
