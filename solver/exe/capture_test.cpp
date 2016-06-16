@@ -5,6 +5,10 @@
 #include <string>
 
 
+const int FLIP_UD = 1;
+const int FLIP_LR = 2;
+
+
 bool CheckHitKey(int key,char c);
 
 
@@ -30,6 +34,7 @@ int main(){
 	}
 
 	int mode = 0;
+	int flip = 0;
 	int value = 100;
 	
 	Console::ClearScreen(0);
@@ -40,9 +45,10 @@ int main(){
 				 "=  q:exit               [:value up               =\n"
 				 "=  s:save               ]:value down             =\n"
 				 "=  t:threshold                                   =\n"
+				 "=  v:flip vertical      h:flip horizontal        =\n"
 				 "==================================================\n"
-				 "=   Mode:                                        =\n"
-				 "=  value:                                        =\n"
+				 "=   Mode:               v:                       =\n"
+				 "=  value:               h:                       =\n"
 				 "=    key:                                        =\n"
 				 "==================================================\n"
 				 "=LOG                                              \n"
@@ -53,7 +59,7 @@ int main(){
 				 "                                                  \n"
 				 "==================================================\n";
 
-	cv::Mat origin,frame,gray,thre;
+	cv::Mat origin,frame,gray,thre,tmp;
 	bool nutoral = true;
 	origin = cv::imread (image_file);
 	while(1)//無限ループ
@@ -61,7 +67,23 @@ int main(){
 
 		//カメラ画像取得、サイズ変換
  		if(device != -1)cap >> origin;
-		resize(origin,frame,cv::Point(), 0.5, 0.5);
+		resize(origin,frame,cv::Point(), 1.0, 1.0);
+
+
+		//反転
+		if(flip == (FLIP_LR|FLIP_UD)){
+			//上下左右
+			cv::flip(frame, tmp, -1);
+			frame = tmp;
+		}else if(flip == FLIP_LR){
+			//左右
+			cv::flip(frame, tmp, 1);
+			frame = tmp;
+		}else if(flip == FLIP_UD){
+			//上下
+			cv::flip(frame, tmp, 0);
+			frame = tmp;
+		}
 
 
 		//二値化
@@ -120,6 +142,12 @@ int main(){
 		}else if(CheckHitKey(key,']')){
 			//減少
 			value-=5;
+		}else if(CheckHitKey(key,'v')){
+			//左右反転
+			flip^=FLIP_LR;
+		}else if(CheckHitKey(key,'h')){
+			//上下反転
+			flip^=FLIP_UD;
 		}
 		//キー解放
 		if(key == -1){
@@ -129,13 +157,19 @@ int main(){
 		}
 
 		//描画
-		Console::SetCursorPos(10,8);
-		std::cout << mode << "   ";
 		Console::SetCursorPos(10,9);
-		std::cout << value << "   ";
+		std::cout << mode << "   ";
 		Console::SetCursorPos(10,10);
+		std::cout << value << "   ";
+		Console::SetCursorPos(10,11);
 		std::cout << key << "      ";
-		Console::SetCursorPos(0,20);
+		Console::SetCursorPos(27,9);
+		if(flip&FLIP_LR)std::cout << "on  ";
+		else std::cout << "off ";
+		Console::SetCursorPos(27,10);
+		if(flip&FLIP_UD)std::cout << "on  ";
+		else std::cout << "off ";
+		Console::SetCursorPos(0,21);
 
 		std::cout << std::flush;
 
