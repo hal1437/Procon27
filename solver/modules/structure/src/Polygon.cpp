@@ -15,6 +15,16 @@ double Polygon::getArea()const{
 	//ググって探す
 	return 0;
 }
+//角度算出
+double Polygon::getAngle(int index)const{
+	if(index < 0 || this->v.size() <= index){
+		//範囲外であれば
+		std::cout << "[Polygon.cpp] Index overran in Polygon::getAngle" << std::endl;
+		return 0;
+	}else{
+		
+	}
+}
 
 
 //頂点追加
@@ -31,8 +41,8 @@ Point Polygon::getNode(int index)const{
 	}else{
 		return this->v[index];
 	}
-
 }
+
 //頂点追加
 bool Polygon::addNode(const Point& p){
 	this->v.push_back(p);

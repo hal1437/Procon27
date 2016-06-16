@@ -28,6 +28,13 @@ public:
 	_Point& operator-=(const Type& rhs)const;
 	_Point& operator*=(const Type& rhs)const;
 	_Point& operator/=(const Type& rhs)const;
+	
+	
+	bool operator< (const _Point<Type>& rhs)const;
+	bool operator==(const _Point<Type>& rhs)const;
+
+	//v1からv2へ反時計周りの角度を取得する。
+	static double getAngle2Vec(const _Point& v1,const _Point& v2);
 
 	//正規化
 	bool Norm();

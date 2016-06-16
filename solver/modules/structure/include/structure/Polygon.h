@@ -7,6 +7,19 @@
 
 //多角形クラス
 class Polygon:public Printable{
+/*
+ * ・反時計周りに番号を振ること
+ *
+ *　 　7
+ *  1　┏━━━┓6
+ * 　┏┛0　 　┃
+ * 　┃　　 4　┃
+ * 　┃　　　┏┛5
+ * 　┗━━━┛
+ *  2         3
+ *
+ * */
+
 protected:
 
 	std::vector<Point> v; //頂点座標
@@ -17,6 +30,8 @@ public:
 	bool normalize();
 	//面積算出
 	double getArea()const;
+	//角度算出
+	double getAngle(int index)const;
 
 	//頂点数取得
 	size_t size()const;

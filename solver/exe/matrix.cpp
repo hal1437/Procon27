@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <structure/Point.hpp>
 #include <structure/Matrix.hpp>
 #include <random>
 
@@ -8,11 +9,9 @@ int main(){
 	vMat pos = vMat::ConvertMatrix(Point(1,0));
 	Matrix<3,3> c_mat;
 	
-	c_mat = cMat::MakeRotateMatrix(3.141592/100);
-	
-	for(int i=0;i<100;i++){
-		std::cout << "separator:" << i ;
-		std::cout << ":mat =" << pos << std::endl;
-		pos = pos * c_mat;
-	}
+	Point v1(0, 1);
+	Point v2(0,-1);
+
+	std::cout << Point::getAngle2Vec(v1,v2) << std::endl;
+
 }
