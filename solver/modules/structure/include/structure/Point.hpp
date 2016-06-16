@@ -134,13 +134,9 @@ double _Point<Type>::getAngle2Vec(const _Point<Type>& v1,const _Point<Type>& v2)
 			isObtuse = (a1 > a2);
 	}else{
 		a1 = v1.x / v1.y;
-		if(v1.x < 0){
-			//上向き
-			isObtuse = (a1 > a2);
-		}else{
-			//下向き
-			isObtuse = (a1 < a2);
-		}
+		a2 = v2.x / v2.y;
+		//上向き
+		isObtuse = (a1 > a2);
 	}
 
 	//角度計算
