@@ -26,3 +26,9 @@ target_link_libraries(matrix ${OpenCV_LIBS})
 message(STATUS "  matrix")
 
 
+add_executable(Search search.cpp)
+target_link_libraries(Search structure)
+target_link_libraries(Search search)
+target_link_libraries(Search ${OpenCV_LIBS})
+message(STATUS "  Search")
+
