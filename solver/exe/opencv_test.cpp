@@ -35,7 +35,7 @@ int main(){
 		std::cout << polygon << std::endl;
 		img << polygon;
 		for(int i=0;i<5;i++){
-			DrawPoint(img,p[i],5,cv::Scalar(0,0,255),3);
+			DrawPoint(img,p[i],5,3,cv::Scalar(0,0,255),false);
 		}
 		cc += 2*3.141592/200;
 
