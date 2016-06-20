@@ -95,9 +95,23 @@ bool _Point<Type>::Norm(){
 	}
 }
 template <class Type>
-_Point<Type> _Point<Type>::getNorm(){
+_Point<Type> _Point<Type>::getNorm()const{
 	_Point<Type> answer(*this);
 	answer.Norm();
+	return answer;
+}
+template <class Type>
+bool _Point<Type>::Rotate(double angle){
+	Type x_n =  std::cos(angle) * this->x + std::sin(angle) * this->y;
+	Type y_n = -std::sin(angle) * this->x + std::cos(angle) * this->y;
+	this->x = x_n;
+	this->y = y_n;
+	return true;
+}
+template <class Type>
+_Point<Type> _Point<Type>::getRotate(double angle)const{
+	_Point<Type> answer(*this);
+	answer.Rotate(angle);
 	return answer;
 }
 
@@ -124,27 +138,22 @@ void _Point<Type>::Print(std::ostream& ost)const{
 template <class Type>
 double _Point<Type>::getAngle2Vec(const _Point<Type>& v1,const _Point<Type>& v2){
 	if(v1==_Point<Type>() || v2==_Point<Type>())return 0;
-	double a1,a2;
 
 	//鈍角かどうか
 	bool isObtuse;
-	if(v1.x!=0){
-		a1 = v1.y / v1.x;
-		a2 = v2.y / v2.x;
-			isObtuse = (a1 > a2);
-	}else{
-		a1 = v1.x / v1.y;
-		a2 = v2.x / v2.y;
-		//上向き
-		isObtuse = (a1 > a2);
-	}
+	double base_angle = std::acos(v1.x/v1.size());
+	if(v1.x == 0 && v1.y > 0)base_angle =  3.141592/2;
+	if(v1.x == 0 && v1.y < 0)base_angle = -3.141592/2;
+	Point v2_d = v2.getRotate(base_angle);
+
+	if(v2_d.y < 0)isObtuse=true;
+
 
 	//角度計算
 	double angle;
 	angle = std::acos((v1.x*v2.x+v1.y*v2.y)/(v1.size()*v2.size()));
 	
 	if(isObtuse){
-		std::cout << "それは鈍角" << std::endl;
 		return 2*3.141592-angle;
 	
 	}else        return angle;
