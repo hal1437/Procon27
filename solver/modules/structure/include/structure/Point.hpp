@@ -142,12 +142,12 @@ double _Point<Type>::getAngle2Vec(const _Point<Type>& v1,const _Point<Type>& v2)
 	//鈍角かどうか
 	bool isObtuse;
 	double base_angle = std::acos(v1.x/v1.size());
+	if(v1.y < 0) base_angle = -base_angle;
 	if(v1.x == 0 && v1.y > 0)base_angle =  3.141592/2;
 	if(v1.x == 0 && v1.y < 0)base_angle = -3.141592/2;
 	Point v2_d = v2.getRotate(base_angle);
 
 	if(v2_d.y < 0)isObtuse=true;
-
 
 	//角度計算
 	double angle;
