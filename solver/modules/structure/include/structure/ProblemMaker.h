@@ -1,4 +1,5 @@
 
+#pragma once
 #include <structure/Problem.h>
 #include <structure/Range.h>
 #include <util/ClockWiseFor.h>

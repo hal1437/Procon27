@@ -7,4 +7,3 @@ add_library(util ${UTIL_SOURCES})
 target_include_directories(util PUBLIC include)
 target_include_directories(util PRIVATE include/util)
 
-

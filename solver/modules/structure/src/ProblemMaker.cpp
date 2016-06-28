@@ -232,9 +232,10 @@ Problem ProblemMaker::MakeTriangleProblem(){
 		poly.addNode(points[std::get<0>(node)]);
 		poly.addNode(points[std::get<1>(node)]);
 		poly.addNode(points[std::get<2>(node)]);
-		
+		poly.ConfirmNumbers();
 		prob.pieces.push_back(poly);
 	}
+	prob.frame.ConfirmNumbers();
 
 	return prob;
 }

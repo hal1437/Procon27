@@ -74,6 +74,15 @@ _Point<Type>& _Point<Type>::operator/=(const Type& rhs)const{
 	this->y /= rhs;
 	return (*this);
 }
+template <class Type>
+bool _Point<Type>::operator< (const _Point<Type>& rhs)const{
+	if(this->x == rhs.x)return (this->y < rhs.y);
+	else return (this->x == rhs.x);
+}
+template <class Type>
+bool _Point<Type>::operator==(const _Point<Type>& rhs)const{
+	return (this->x == rhs.x && this->y == rhs.y);
+}
 
 
 template <class Type>
@@ -86,9 +95,23 @@ bool _Point<Type>::Norm(){
 	}
 }
 template <class Type>
-_Point<Type> _Point<Type>::getNorm(){
+_Point<Type> _Point<Type>::getNorm()const{
 	_Point<Type> answer(*this);
 	answer.Norm();
+	return answer;
+}
+template <class Type>
+bool _Point<Type>::Rotate(double angle){
+	Type x_n =  std::cos(angle) * this->x + std::sin(angle) * this->y;
+	Type y_n = -std::sin(angle) * this->x + std::cos(angle) * this->y;
+	this->x = x_n;
+	this->y = y_n;
+	return true;
+}
+template <class Type>
+_Point<Type> _Point<Type>::getRotate(double angle)const{
+	_Point<Type> answer(*this);
+	answer.Rotate(angle);
 	return answer;
 }
 
@@ -109,5 +132,30 @@ double _Point<Type>::angle(const _Point<Type>& rhs)const{
 template <class Type>
 void _Point<Type>::Print(std::ostream& ost)const{
 	ost << "(" << x << "," << y << ")";
+}
+
+
+template <class Type>
+double _Point<Type>::getAngle2Vec(const _Point<Type>& v1,const _Point<Type>& v2){
+	if(v1==_Point<Type>() || v2==_Point<Type>())return 0;
+
+	//鈍角かどうか
+	bool isObtuse;
+	double base_angle = std::acos(v1.x/v1.size());
+	if(v1.y < 0) base_angle = -base_angle;
+	if(v1.x == 0 && v1.y > 0)base_angle =  M_PI/2;
+	if(v1.x == 0 && v1.y < 0)base_angle = -M_PI/2;
+	Point v2_d = v2.getRotate(base_angle);
+
+	if(v2_d.y < 0)isObtuse=true;
+
+	//角度計算
+	double angle;
+	angle = std::acos((v1.x*v2.x+v1.y*v2.y)/(v1.size()*v2.size()));
+	
+	if(isObtuse){
+		return 2*M_PI-angle;
+	
+	}else        return angle;
 }
 

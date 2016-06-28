@@ -1,5 +1,6 @@
 
 #pragma once
+#define _USE_MATH_DEFINES
 #include <util/Printable.h>
 #include <cmath>
 
@@ -28,10 +29,21 @@ public:
 	_Point& operator-=(const Type& rhs)const;
 	_Point& operator*=(const Type& rhs)const;
 	_Point& operator/=(const Type& rhs)const;
+	
+	
+	bool operator< (const _Point<Type>& rhs)const;
+	bool operator==(const _Point<Type>& rhs)const;
+
+	//v1からv2へ反時計周りの角度を取得する。
+	static double getAngle2Vec(const _Point& v1,const _Point& v2);
 
 	//正規化
 	bool Norm();
-	_Point getNorm();
+	_Point getNorm()const;
+	
+	//一次変換
+	bool Rotate(double angle);
+	_Point getRotate(double angle)const;
 
 	//大きさの取得
 	double size()const;
