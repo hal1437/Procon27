@@ -4,7 +4,7 @@
 #include <structure/Point.hpp>
 #include <structure/Polygon.h>
 #include <structure/ProblemMaker.h>
-// #include <structure/Drawer.h>
+#include <structure/Drawer.h>
 #include <cmath>
 #include <opencv2/opencv.hpp>
 
@@ -22,8 +22,8 @@ int main(){
 
 		cv::Mat img = cv::Mat::zeros(800, 800, CV_8UC3);
 
-// 		std::cout << p;
-// 		img << p;
+		std::cout << p;
+		img << p;
 
 		cv::namedWindow("drawing", CV_WINDOW_AUTOSIZE|CV_WINDOW_FREERATIO);
 		cv::imshow("drawing", img);

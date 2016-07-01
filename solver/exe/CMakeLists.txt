@@ -7,12 +7,13 @@ message(STATUS "  hello")
 
 add_executable(graph graph.cpp)
 target_link_libraries(graph structure)
+target_link_libraries(graph util)
 target_link_libraries(graph ${OpenCV_LIBS})
 message(STATUS "  graph")
 
 add_executable(opencv_test opencv_test.cpp)
-target_link_libraries(opencv_test ${OpenCV_LIBS})
 target_link_libraries(opencv_test structure)
+target_link_libraries(opencv_test ${OpenCV_LIBS})
 message(STATUS "  opencv_test")
 
 add_executable(capture_test capture_test.cpp)

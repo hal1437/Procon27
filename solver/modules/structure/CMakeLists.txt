@@ -10,3 +10,10 @@ target_include_directories(structure PRIVATE include/structure)
 # ライブラリをリンク
 target_link_libraries(structure util)
 
+# OpenCVが発見できればOpenCVもリンク
+if(OpenCV_FOUND)
+  target_link_libraries(structure ${OpenCV_LIBS})
+endif()
+
+
+

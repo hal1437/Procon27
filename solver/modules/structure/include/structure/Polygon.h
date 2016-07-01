@@ -28,10 +28,14 @@ public:
 
 	//正規化
 	bool normalize();
+	Polygon getNormalize()const;
 	//面積算出
 	double getArea()const;
 	//角度算出
 	double getAngle(int index)const;
+
+	//番号調整
+	bool ConfirmNumbers();
 
 	//頂点数取得
 	size_t size()const;

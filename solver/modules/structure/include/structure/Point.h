@@ -1,5 +1,6 @@
 
 #pragma once
+#define _USE_MATH_DEFINES
 #include <util/Printable.h>
 #include <cmath>
 
@@ -38,7 +39,11 @@ public:
 
 	//正規化
 	bool Norm();
-	_Point getNorm();
+	_Point getNorm()const;
+	
+	//一次変換
+	bool Rotate(double angle);
+	_Point getRotate(double angle)const;
 
 	//大きさの取得
 	double size()const;
