@@ -12,8 +12,8 @@ public:
 	struct Hand{
 		int index;
 		Point pos;
-		bool fixing;     //固定
-		std::vector<double> angle; //回転角
+		bool reverse;
+		double angle; //回転角
 	};
 
 public:
@@ -27,7 +27,7 @@ private:
 	
 public:
 	//探索
-	virtual Answer Search(Argment arg);
+	virtual Answer Search(const Problem& prob);
 	
 
 };
