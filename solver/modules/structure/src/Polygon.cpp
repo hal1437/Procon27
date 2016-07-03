@@ -55,7 +55,6 @@ bool Polygon::reverse(){
 		this->setNode(i,this->getNode(i).getRotate(-base_angle));
 		this->setNode(i,this->getNode(i) + base);
 	}
-	std::cout << "angle : " << base_angle*180/M_PI << std::endl;
 	return true;
 }
 
@@ -117,7 +116,7 @@ size_t Polygon::size()const{
 Point Polygon::getNode(int index)const{
 	if(index < 0 || this->v.size() <= index){
 		//範囲外であれば
-		std::cout << "[Polygon.cpp] Index overran in Polygon::getPoint" << std::endl;
+		std::cout << "[Polygon.cpp] index = \"" << index << "\" overran in Polygon::getNode" << std::endl;
 		return Point();
 	}else{
 		return this->v[index];
@@ -136,7 +135,7 @@ bool Polygon::addNode(size_t index,const Point& p){
 //頂点設定
 bool Polygon::setNode(int index,const Point& pos){
 	if(index < 0 || this->v.size() <= index){
-		std::cout << "[Polygon.cpp] Index overran in Polygon::setPoint" << std::endl;
+		std::cout << "[Polygon.cpp] index = \"" << index << "\" overran in Polygon::setNode" << std::endl;
 		return false;
 	}else{
 		this->v[index] = pos;
