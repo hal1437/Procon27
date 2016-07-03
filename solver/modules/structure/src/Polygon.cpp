@@ -35,7 +35,7 @@ bool Polygon::normalize(){
 }
 
 Polygon Polygon::getNormalize()const{
-	Polygon p;
+	Polygon p = (*this);
 	p.normalize();
 	return p;
 }
@@ -60,7 +60,7 @@ bool Polygon::reverse(){
 }
 
 Polygon Polygon::getReverse()const{
-	Polygon p;
+	Polygon p = (*this);
 	p.reverse();
 	return p;
 }
