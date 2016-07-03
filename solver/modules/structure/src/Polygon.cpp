@@ -16,7 +16,6 @@ bool Polygon::normalize(){
 
 	//回転変換
 	double angle = Point::getAngle2Vec(Point(-1,0),this->getNode(1));
-	std::cout << "angle:" << angle * 180 / M_PI << std::endl;
 	for(int i=0;i<this->size();i++){
 		this->setNode(i,this->getNode(i).getRotate(angle));
 	}
@@ -40,6 +39,33 @@ Polygon Polygon::getNormalize()const{
 	p.normalize();
 	return p;
 }
+
+//反転
+bool Polygon::reverse(){
+	
+	//0から1へのベクトルをPoint(1,0)方向に変換
+	Point base = this->getNode(0);
+	double base_angle = Point::getAngle2Vec(Point(1,0),this->getNode(1)-base);
+
+	//全ての頂点に対して回転移動しのY軸を反転
+	for(int i=0;i<this->size();i++){
+		this->setNode(i,this->getNode(i) - base);
+		this->setNode(i,this->getNode(i).getRotate(base_angle));
+		this->setNode(i,Point(this->getNode(i).x,-this->getNode(i).y));
+// 		std::cout << Point(this->getNode(i).x,-this->getNode(i).y) << std::endl;
+		this->setNode(i,this->getNode(i).getRotate(-base_angle));
+		this->setNode(i,this->getNode(i) + base);
+	}
+	std::cout << "angle : " << base_angle*180/M_PI << std::endl;
+	return true;
+}
+
+Polygon Polygon::getReverse()const{
+	Polygon p;
+	p.reverse();
+	return p;
+}
+
 
 
 //面積算出

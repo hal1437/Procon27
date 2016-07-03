@@ -20,14 +20,23 @@ int main(){
 	std::cout << "三角問題" << std::endl;
 	for(Polygon p :problem.pieces){
 
-		cv::Mat img = cv::Mat::zeros(800, 800, CV_8UC3);
+		cv::Mat img = cv::Mat::zeros(600, 600, CV_8UC3);
 
-		std::cout << p;
+// 		std::cout << p;
 		img << p;
 
 		cv::namedWindow("drawing", CV_WINDOW_AUTOSIZE|CV_WINDOW_FREERATIO);
 		cv::imshow("drawing", img);
 		cv::waitKey(0);
+
+// 		p.normalize();
+		p.reverse();
+// 		std::cout << p;
+		img << p;
+		cv::namedWindow("drawing", CV_WINDOW_AUTOSIZE|CV_WINDOW_FREERATIO);
+		cv::imshow("drawing", img);
+		cv::waitKey(0);
+
 
 	}
 
