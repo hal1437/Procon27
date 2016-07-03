@@ -2,7 +2,7 @@
 #include <structure/Polygon.h>
 #include <iostream>
 #include <util/NearlyEqual.h>
-
+#include <algorithm>
 
 //正規化
 bool Polygon::normalize(){
