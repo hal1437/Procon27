@@ -9,7 +9,6 @@ bool DrawPolygon(cv::Mat& src,const Polygon& poly,int thickness , const cv::Scal
 	cv::Point** poss = &pos;
 	for(int i=0; i<poly.size(); i++){
 		pos[i] = cv::Point(poly.getNode(i).x,poly.getNode(i).y);
-		std::cout << pos[i].x << "," << pos[i].y << std::endl;
 	}
 	
 	cv::fillConvexPoly(src,pos,poly.size(),color);
