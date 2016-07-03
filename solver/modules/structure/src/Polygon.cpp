@@ -52,7 +52,6 @@ bool Polygon::reverse(){
 		this->setNode(i,this->getNode(i) - base);
 		this->setNode(i,this->getNode(i).getRotate(base_angle));
 		this->setNode(i,Point(this->getNode(i).x,-this->getNode(i).y));
-// 		std::cout << Point(this->getNode(i).x,-this->getNode(i).y) << std::endl;
 		this->setNode(i,this->getNode(i).getRotate(-base_angle));
 		this->setNode(i,this->getNode(i) + base);
 	}
