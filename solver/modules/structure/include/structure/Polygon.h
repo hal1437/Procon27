@@ -29,6 +29,10 @@ public:
 	//正規化
 	bool normalize();
 	Polygon getNormalize()const;
+	//反転
+	bool reverse();
+	Polygon getReverse()const;
+
 	//面積算出
 	double getArea()const;
 	//角度算出
