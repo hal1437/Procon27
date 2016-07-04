@@ -1,6 +1,7 @@
 
 #pragma once 
 #include <structure/Point.hpp>
+#include <structure/Polygon.h>
 #include <util/Printable.h>
 #include <cmath>
 
@@ -47,4 +48,12 @@ public:
 
 typedef Matrix<3,1> vMat; //ベクトル
 typedef Matrix<3,3> cMat; //変換行列
+
+//変換
+Point    operator* (const Point&   p,const cMat& mat);
+Polygon  operator* (const Polygon& p,const cMat& mat);
+Point&   operator*=(Point&   p,const cMat& mat);
+Polygon& operator*=(Polygon& p,const cMat& mat);
+
+
 
