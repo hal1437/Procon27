@@ -79,15 +79,15 @@ int main(){
 			cv::threshold(gray, thre, value, 255, cv::THRESH_BINARY_INV);
 		}
 
-        //表示
-        cv::imshow("thre",thre);
+		//表示
+		cv::imshow("thre",thre);
 
-        //輪郭の座標リスト
-        std::vector<std::vector<cv::Point>> contours;
-        //輪郭の取得
-        cv::findContours(thre, contours, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
-        //検出された輪郭線を緑で描画
-        cv::drawContours(frame, contours, -1, cv::Scalar(0, 255, 0));
+		//輪郭の座標リスト
+		std::vector<std::vector<cv::Point>> contours;
+		//輪郭の取得
+		cv::findContours(thre, contours, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
+		//検出された輪郭線を緑で描画
+		cv::drawContours(frame, contours, -1, cv::Scalar(0, 255, 0));
 
 		//直線近似
 		std::vector<std::vector<cv::Point>> approxes;

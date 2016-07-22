@@ -181,5 +181,6 @@ int main(){
 
 
 bool CheckHitKey(int key,char c){
+	//return key == (c-'a' + 97);
 	return key == (c-'a' + 1048673);
 }
