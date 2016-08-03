@@ -3,17 +3,19 @@
 #include <search/Searcher.h>
 #include <structure/Matrix.hpp>
 #include <structure/Problem.h>
-
+#include <structure/Drawer.h>
+#include <opencv2/opencv.hpp>
 
 //ビームサーチ
 class BeamSearch:public Searcher<std::vector<cMat>,const Problem&>{
 public:
 
 	struct Hand{
-		int index;
-		Point pos;
-		bool reverse;
-		double angle; //回転角
+		int index;    //ピース番号
+		int sub_index;//ピース頂点番号
+		Point pos;    //平行移動量
+		bool reverse; //反転
+		double angle; //回転移動角
 	};
 
 public:
