@@ -11,7 +11,6 @@ class BeamSearch:public Searcher<std::vector<cMat>,const Problem&>{
 public:
 
 	struct Hand{
-		int index;    //ピース番号
 		int sub_index;//ピース頂点番号
 		Point pos;    //平行移動量
 		bool reverse; //反転
@@ -25,8 +24,14 @@ public:
 
 private:
 	const double SAME_ANGLE_EPS = 0.001;
-	std::vector<Hand> Listup(const Problem& prob,const Log& log);
+
+	std::vector<Hand> Listup(const Polygon& frame, const Polygon& piece);
 	
+	//合        致
+	Polygon Merge(const Polygon& frame, const Polygon& poly);
+	
+	//変形
+	Polygon Transform(Polygon poly,Hand trans);
 public:
 	//探索
 	virtual Answer Search(const Problem& prob);
