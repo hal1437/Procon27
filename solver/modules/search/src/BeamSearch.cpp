@@ -121,7 +121,6 @@ BeamSearch::Answer BeamSearch::Search(const Problem& prob){
 			Point p1 = frame.getNode(i)+Point(100,100);
 			Point p2 = frame.getNode((i+1) % frame.size())+Point(100,100);
 			cv::line(frame_base, cv::Point(p1.x, p1.y), cv::Point(p2.x, p2.y), cv::Scalar(0,(i+1)*30,255), 1, CV_AA); 
-			std::cout << p1 << p2 << std::endl;
 		}
 
 		//ポリゴンを描画
@@ -133,19 +132,14 @@ BeamSearch::Answer BeamSearch::Search(const Problem& prob){
 // 			std::cout << "  reverse = " << list[i].reverse   << std::endl;
 // 			std::cout << "  angle   = " << list[i].angle*180/M_PI   << std::endl;
 
-			Polygon trans = prob.pieces[0];
+			Polygon origin = prob.pieces[0];
 			cv::Mat img = frame_base.clone();
 
-			//変形
-			trans = Transform(trans,list[i]);
-
 			//出力
-			if(list[i].reverse == false){
-				img << prob.pieces[0] * cMat::MakeMoveMatrix(100,100);
-			}else{
-				img << prob.pieces[0].getReverse() * cMat::MakeMoveMatrix(100,100);
-			}
-			img << trans * cMat::MakeMoveMatrix(100,100);
+			if(list[i].reverse == false)img << prob.pieces[0] * cMat::MakeMoveMatrix(100,100);
+			else                        img << prob.pieces[0].getReverse() * cMat::MakeMoveMatrix(100,100);
+			//変形
+			img << Transform(origin,list[i]) * cMat::MakeMoveMatrix(100,100);
 
 			cv::namedWindow("B-Search", CV_WINDOW_AUTOSIZE|CV_WINDOW_FREERATIO);
 			cv::imshow("B-Search", img);
@@ -157,7 +151,6 @@ BeamSearch::Answer BeamSearch::Search(const Problem& prob){
 		trans = Transform(trans,list[0]);
 
 		frame = Merge(frame,trans);
-		cv::waitKey(0);
 	}
 	return answer;
 }
