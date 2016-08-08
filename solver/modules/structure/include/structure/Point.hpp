@@ -140,8 +140,8 @@ double _Point<Type>::getAngle2Vec(const _Point<Type>& v1,const _Point<Type>& v2)
 	if(v1==_Point<Type>() || v2==_Point<Type>())return 0;
 	
 	//傾きが等しい
-	if(v1.x != 0 && v2.x != 0 && v1.y/v1.x == v2.y/v2.x)return 0;
-	if(v1.y != 0 && v2.y != 0 && v1.x/v1.y == v2.x/v2.y)return 0;
+	if(v1.x != 0 && v2.x != 0 && std::abs(v1.y/v1.x - v2.y/v2.x) < 0.00001)return 0;
+	if(v1.y != 0 && v2.y != 0 && std::abs(v1.x/v1.y - v2.x/v2.y) < 0.00001)return 0;
 
 	//鈍角かどうか
 	bool isObtuse;
