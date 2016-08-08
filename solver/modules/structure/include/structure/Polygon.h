@@ -41,6 +41,9 @@ public:
 	//番号調整
 	bool ConfirmNumbers();
 
+	//内包
+	bool isComprehension(const Point& p)const;
+
 	//頂点数取得
 	size_t size()const;
 	//頂点追加
