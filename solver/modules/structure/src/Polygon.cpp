@@ -105,6 +105,20 @@ bool Polygon::ConfirmNumbers(){
 	return true;
 }
 
+//内包
+bool Polygon::isComprehension(const Point& p)const{
+	if(std::find(v.begin(),v.end(),p) !=v.end())return true;
+
+	double sum = 0;
+	for(int i=0;i<this->size();i++){
+		double angle = Point::getAngle2Vec(v[i]-p,v[(i+1)%this->size()]-p);
+		if(angle > M_PI)angle = angle - 2*M_PI;
+		sum += angle;
+// 		std::cout << angle*180/M_PI << "[deg]" << std::endl;
+	}
+// 	std::cout << sum*180/M_PI << "[deg]" << std::endl;
+	return (std::abs(sum*180/M_PI-360) < 0.01f);
+}
 
 
 //頂点追加
