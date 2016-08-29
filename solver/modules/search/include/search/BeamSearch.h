@@ -5,6 +5,7 @@
 #include <structure/Problem.h>
 #include <structure/Drawer.h>
 #include <opencv2/opencv.hpp>
+#include <random>
 
 //ビームサーチ
 class BeamSearch:public Searcher<std::vector<cMat>,const Problem&>{
@@ -25,9 +26,10 @@ public:
 private:
 	const double SAME_ANGLE_EPS = 0.001;
 
-	std::vector<Hand> Listup(const Polygon& frame, const Polygon& piece);
+	//頂点に対する変形のリストを取得
+	std::vector<Hand> Listup(const Polygon& frame,int frame_index, const Polygon& piece);
 	
-	//合        致
+	//合致
 	Polygon Merge(const Polygon& frame, const Polygon& poly);
 	
 	//変形
