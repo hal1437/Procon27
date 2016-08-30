@@ -4,11 +4,12 @@
 #include <structure/Matrix.hpp>
 #include <structure/Problem.h>
 #include <structure/Drawer.h>
+#include <structure/Algorithm.h>
 #include <opencv2/opencv.hpp>
 #include <random>
 
-//ビームサーチ
-class BeamSearch:public Searcher<std::vector<cMat>,const Problem&>{
+//シーケンスサーチ
+class SequenceSearch:public Searcher<std::vector<cMat>,const Problem&>{
 public:
 
 	struct Hand{

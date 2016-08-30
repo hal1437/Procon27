@@ -1,11 +1,11 @@
 
-#include <search/BeamSearch.h>
+#include <search/SequenceSearch.h>
 #define LoopRenge(x,r) ((x+r)%r)
 #define LR(x,r) (LoopRenge(x,r))
 
-std::vector<BeamSearch::Hand> BeamSearch::Listup(const Polygon& frame,int frame_index, const Polygon& piece){
+std::vector<SequenceSearch::Hand> SequenceSearch::Listup(const Polygon& frame,int frame_index, const Polygon& piece){
 	//多角形の頂点を枠の頂点に一致させる。
-	std::vector<BeamSearch::Hand> answer;
+	std::vector<SequenceSearch::Hand> answer;
 
 	const Polygon& pol    = piece;
 	const Polygon  re_pol = piece.getReverse();
@@ -48,29 +48,38 @@ std::vector<BeamSearch::Hand> BeamSearch::Listup(const Polygon& frame,int frame_
 	for(int i = 0;i<answer.size();i++){
 		Polygon trans = Transform(piece,answer[i]);
 		bool is_over = false;
+
 		//変形後の全ての頂点がframeに内包されていれば
 		for(int j=0;j<trans.size();j++){
 			if(trans.getNode(j) == frame.getNode(frame_index))continue;
 			if(frame.isComprehension(trans.getNode(j))==false){
 				is_over = true;
-// 				std::cout << "trans:i=" << i << ":j=" << j << ":is_over" << std::endl;
+				break;
 			}
 		}
+		//交差しているのもダメ
+		for(int j=0;j<frame.size();j++){
+			for(int k=0;k<trans.size();k++){
+				if(isCrossed(frame.getNode(j),frame.getNode((j+1)%frame.size()),
+				             trans.getNode(k),trans.getNode((k+1)%piece.size()))){
+					is_over = true;
+// 					std::cout << "crossed"  << i << ":" << j << ":" << k << std::endl;
+					break;
+				}
+			}
+		}
+
+		//消えてもらおう
 		if(is_over == true){
 			answer.erase(answer.begin()+i);
 			i--;
 		}else{
-// 			std::cout << "alive:" << index++ << std::endl;
-// 			std::cout << trans << std::endl;
 		}
 	}
 	return answer;
 }
-Polygon BeamSearch::Merge(const Polygon& frame, const Polygon& poly){
+Polygon SequenceSearch::Merge(const Polygon& frame, const Polygon& poly){
 	Polygon answer = frame;
-// 	std::cout << frame << std::endl;
-// 	std::cout << poly << std::endl;
-
 
 	for(int i=0;i<frame.size();i++){
 		for(int j=0;j<poly.size();j++){
@@ -87,7 +96,6 @@ Polygon BeamSearch::Merge(const Polygon& frame, const Polygon& poly){
 					for(int k=1;k<poly.size();k++){
 						answer.addNode(i,poly.getNode(LR(j+k,poly.size())));
 					}
-					std::cout << "Transform:1;" << i << ":" << j << std::endl;
 				}else 
 				//v1とf2の傾きがほぼ等しい
 				if(std::abs(M_PI - Point::getAngle2Vec(v1,f2)) > M_PI - SAME_ANGLE_EPS){
@@ -95,7 +103,6 @@ Polygon BeamSearch::Merge(const Polygon& frame, const Polygon& poly){
 					for(int k=poly.size()-1;k!=0;k--){
 						answer.addNode(i+1,poly.getNode(LR(j+k,poly.size())));
 					}
-					std::cout << "Transform:2;" << i << ":" << j << std::endl;
 				}else
 				//v2とf1の傾きがほぼ等しい
 				if(std::abs(M_PI - Point::getAngle2Vec(v2,f1)) > M_PI - SAME_ANGLE_EPS){
@@ -103,7 +110,6 @@ Polygon BeamSearch::Merge(const Polygon& frame, const Polygon& poly){
 					for(int k=poly.size()-1;k!=0;k--){
 						answer.addNode(i,poly.getNode(LR(j+k,poly.size())));
 					}
-					std::cout << "Transform:3;" << i << ":" << j << std::endl;
 				}else
 				//v2とf2の傾きがほぼ等しい
 				if(std::abs(M_PI - Point::getAngle2Vec(v2,f2)) > M_PI - SAME_ANGLE_EPS){
@@ -111,7 +117,6 @@ Polygon BeamSearch::Merge(const Polygon& frame, const Polygon& poly){
 					for(int k=1;k<poly.size();k++){
 						answer.addNode(i+1,poly.getNode(LR(j+k,poly.size())));
 					}
-					std::cout << "Transform:4;" << i << ":" << j << std::endl;
 				}else{
 					std::cout << "== NO MATCHING EXCEPTION ==" << std::endl;
 					std::cout << "v1:" << v1 << std::endl;
@@ -134,7 +139,7 @@ Polygon BeamSearch::Merge(const Polygon& frame, const Polygon& poly){
 }
 
 
-Polygon BeamSearch::Transform(Polygon poly,Hand trans){
+Polygon SequenceSearch::Transform(Polygon poly,Hand trans){
 	if(trans.reverse == true)poly.reverse();         //反転
 	Point p = poly.getNode(trans.sub_index);         //選択頂点
 	poly *= cMat::MakeMoveMatrix(-p.x,-p.y);         //選択頂点を原点に
@@ -143,51 +148,46 @@ Polygon BeamSearch::Transform(Polygon poly,Hand trans){
 	return poly;
 }
 
-BeamSearch::Answer BeamSearch::Search(const Problem& prob){
-	BeamSearch::Answer answer;
-	Polygon frame = prob.frame;
-	std::random_device rd;
+SequenceSearch::Answer SequenceSearch::Search(const Problem& prob){
+	SequenceSearch::Answer answer;  //回答
+	Polygon frame = prob.frame; //フレーム
+	std::random_device rd;      //乱数生成器
 
-	int cc = 0;
-	int retry = 0;
+	int retry = 0;//再試行
+
 	//全てのピースに対して
 	for(int p = 0;p<prob.pieces.size();p++){
 
-		cv::Mat frame_base = cv::Mat::zeros(600, 600, CV_8UC3);
-		std::vector<BeamSearch::Hand> list = Listup(frame,(p) % frame.size(),prob.pieces[p]);
-		
+		int put_frame_index = rd() % frame.size(); //フレームの配置頂点
+
 		//フレームを描画
+		cv::Mat frame_base = cv::Mat::zeros(600, 600, CV_8UC3);
 		for(int i=0;i<frame.size();i++){
 			Point p1 = frame.getNode(i)+Point(100,100);
 			Point p2 = frame.getNode((i+1) % frame.size())+Point(100,100);
 			cv::line(frame_base, cv::Point(p1.x, p1.y), cv::Point(p2.x, p2.y), cv::Scalar(0,(i+1)*30,255), 1, CV_AA); 
 		}
 
+		//リストアップ実施
+		std::vector<SequenceSearch::Hand> list = Listup(frame,put_frame_index % frame.size(),prob.pieces[p]);
+		
 		//ポリゴンを描画
-// 		for(int i=0;i<list.size();i++){
 		if(list.size() > 0){
 			int i = 0;
-// 		
-// 			std::cout << "#" << i << std::endl;
-// 			std::cout << "  index   = " << 0     << std::endl;
-// 			std::cout << "  s_index = " << list[i].sub_index << std::endl;
-// 			std::cout << "  pos     = " << list[i].pos       << std::endl;
-// 			std::cout << "  reverse = " << list[i].reverse   << std::endl;
-// 			std::cout << "  angle   = " << list[i].angle*180/M_PI   << std::endl;
-
 			Polygon origin = prob.pieces[p];
-			cv::Mat img = frame_base.clone();
 
-			//出力
+			//フレームからクローンして
+			cv::Mat img = frame_base.clone(); 
+
+			//オリジナルを出力
 			if(list[i].reverse == false)img << origin * cMat::MakeMoveMatrix(100,100);
 			else                        img << origin.getReverse() * cMat::MakeMoveMatrix(100,100);
-			//変形
+			//変形後を出力
 			img << Transform(origin,list[i]) * cMat::MakeMoveMatrix(100,100);
-// 			std::cout << Transform(origin,list[i]) << std::endl;
 
 			cv::namedWindow("B-Search", CV_WINDOW_AUTOSIZE|CV_WINDOW_FREERATIO);
 			cv::imshow("B-Search", img);
-			cv::waitKey(0);
+			cv::waitKey(1);
 		}
 
 		//先頭の一つ目の変形を適用
@@ -195,13 +195,19 @@ BeamSearch::Answer BeamSearch::Search(const Problem& prob){
 		if(list.size() > 0){
 			frame = Merge(frame,Transform(trans,list[0]));
 			retry = 0;
+			std::cout << "Applay index:0" << std::endl;
+			answer.push_back(cMat::MakeRotateMatrix(list[0].angle) * cMat::MakeMoveMatrix(list[0].pos.x,list[0].pos.y));
 		}else{
-			std::cout << "nothing hand..." << std::endl;
-			if(retry != 1000){
+			if(retry < 10){
+				//再検索
 				p--;
 				retry++;
-				std::cout << "retry" << std::endl;
 				continue;
+			}
+			else{
+				retry = 0;
+				std::cout << "NOT FOUND" << std::endl;
+				answer.push_back(cMat());
 			}
 		}
 
@@ -216,9 +222,10 @@ BeamSearch::Answer BeamSearch::Search(const Problem& prob){
 		}
 		cv::namedWindow("B-Search", CV_WINDOW_AUTOSIZE|CV_WINDOW_FREERATIO);
 		cv::imshow("B-Search",frame_base);
-		cv::waitKey(0);
+		cv::waitKey(1);
 	}
 	std::cout << "finished" << std::endl;
+	cv::waitKey(0);
 
 
 	return answer;

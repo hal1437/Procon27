@@ -1,11 +1,11 @@
 
 #include <iostream>
 #include <structure/ProblemMaker.h>
-#include <search/BeamSearch.h>
+#include <search/SequenceSearch.h>
 
 int main(){
 	
-	BeamSearch bs;
+	SequenceSearch bs;
 
 	//問題作成
 	Problem prob = ProblemMaker::MakeTriangleProblem();
