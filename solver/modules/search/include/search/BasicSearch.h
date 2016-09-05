@@ -14,6 +14,7 @@ struct TransParam{
 	Point pos;    //平行移動量
 	bool reverse; //反転
 	double angle; //回転移動角
+
 };
 
 
@@ -27,7 +28,7 @@ public:
 	typedef Searcher<std::vector<cMat>,Problem> Searcher;
 	typedef std::vector<TransParam> Log;
 
-protected:
+public:
 	constexpr static double SAME_ANGLE_EPS = 0.001;
 
 	//頂点に対する変形のリストを取得
@@ -44,5 +45,7 @@ public:
 	
 
 };
+
+bool operator==(const TransParam& lhs, const TransParam& rhs);
 
 

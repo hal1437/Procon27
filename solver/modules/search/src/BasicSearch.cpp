@@ -147,3 +147,10 @@ Polygon BasicSearch::Transform(Polygon poly,TransParam trans){
 	poly *= cMat::MakeMoveMatrix(trans.pos.x,trans.pos.y);//平行移動{
 	return poly;
 }
+
+bool operator==(const TransParam& lhs, const TransParam& rhs){
+	return std::tie(lhs.sub_index,lhs.pos,lhs.reverse,lhs.angle) == std::tie(rhs.sub_index,rhs.pos,rhs.reverse,rhs.angle);
+}
+
+
+
