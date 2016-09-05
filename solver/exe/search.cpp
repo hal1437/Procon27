@@ -2,10 +2,12 @@
 #include <iostream>
 #include <structure/ProblemMaker.h>
 #include <search/SequenceSearch.h>
+#include <search/InstantViewer.h>
 
 int main(){
 	
 	SequenceSearch bs;
+	InstantViewer viewer;
 
 	//問題作成
 	Problem prob = ProblemMaker::MakeTriangleProblem();
@@ -14,9 +16,10 @@ int main(){
 		prob.pieces[i].normalize();
 	}
 
-	//
-	bs.Search(prob);
+	viewer.SetProblem(prob);
+	viewer.SetSolver(&bs);
 
-
+	viewer.Solve();
+	viewer.View();
 
 }
