@@ -3,9 +3,9 @@
 #define LoopRenge(x,r) ((x+r)%r)
 #define LR(x,r) (LoopRenge(x,r))
 
-std::vector<BasicSearch::Hand> BasicSearch::Listup(const Polygon& frame,int frame_index, const Polygon& piece){
+std::vector<TransParam> BasicSearch::Listup(const Polygon& frame,int frame_index, const Polygon& piece){
 	//多角形の頂点を枠の頂点に一致させる。
-	std::vector<BasicSearch::Hand> answer;
+	std::vector<TransParam> answer;
 
 	const Polygon& pol    = piece;
 	const Polygon  re_pol = piece.getReverse();
@@ -32,13 +32,13 @@ std::vector<BasicSearch::Hand> BasicSearch::Listup(const Polygon& frame,int fram
 			Point v2 = pol   .getNode(LR(i         +1,pol   .size())) - pol   .getNode(i);
 			Point r2 = re_pol.getNode(LR(i         +1,re_pol.size())) - re_pol.getNode(i);
 			Point f2 = frame .getNode(LR(frame_index+1,frame .size())) - frame .getNode(frame_index);
-			answer.push_back(Hand{i,frame.getNode(frame_index),false,Point::getAngle2Vec(v1,f1)});
-			answer.push_back(Hand{i,frame.getNode(frame_index),true ,Point::getAngle2Vec(r1,f2)});
+			answer.push_back(TransParam{i,frame.getNode(frame_index),false,Point::getAngle2Vec(v1,f1)});
+			answer.push_back(TransParam{i,frame.getNode(frame_index),true ,Point::getAngle2Vec(r1,f2)});
 			
 			//角度不一致(追加2種類)
 			if(fitting==false){
-				answer.push_back(Hand{i,frame.getNode(frame_index),false,Point::getAngle2Vec(v2,f2)});
-				answer.push_back(Hand{i,frame.getNode(frame_index),true ,Point::getAngle2Vec(r2,f1)});
+				answer.push_back(TransParam{i,frame.getNode(frame_index),false,Point::getAngle2Vec(v2,f2)});
+				answer.push_back(TransParam{i,frame.getNode(frame_index),true ,Point::getAngle2Vec(r2,f1)});
 			}
 		}
 	}
@@ -46,7 +46,7 @@ std::vector<BasicSearch::Hand> BasicSearch::Listup(const Polygon& frame,int fram
 	int old = answer.size();
 	int index = 0;
 	for(int i = 0;i<answer.size();i++){
-		Polygon trans = Transform(piece,answer[i]);
+		Polygon trans = BasicSearch::Transform(piece,answer[i]);
 		bool is_over = false;
 
 		//変形後の全ての頂点がframeに内包されていれば
@@ -139,7 +139,7 @@ Polygon BasicSearch::Merge(const Polygon& frame, const Polygon& poly){
 }
 
 
-Polygon BasicSearch::Transform(Polygon poly,Hand trans){
+Polygon BasicSearch::Transform(Polygon poly,TransParam trans){
 	if(trans.reverse == true)poly.reverse();         //反転
 	Point p = poly.getNode(trans.sub_index);         //選択頂点
 	poly *= cMat::MakeMoveMatrix(-p.x,-p.y);         //選択頂点を原点に

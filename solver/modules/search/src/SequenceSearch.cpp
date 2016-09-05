@@ -22,7 +22,7 @@ SequenceSearch::Answer SequenceSearch::Search(const Problem& prob){
 // 		}
 
 		//リストアップ実施
-		std::vector<SequenceSearch::Hand> list = Listup(frame,put_frame_index % frame.size(),prob.pieces[p]);
+		std::vector<TransParam> list = Listup(frame,put_frame_index % frame.size(),prob.pieces[p]);
 		
 // 		//ポリゴンを描画
 // 		if(list.size() > 0){
@@ -46,7 +46,7 @@ SequenceSearch::Answer SequenceSearch::Search(const Problem& prob){
 		//先頭の一つ目の変形を適用
 		Polygon trans = prob.pieces[p];
 		if(list.size() > 0){
-			Hand apply;
+			TransParam apply;
 			frame = Merge(frame,Transform(trans,list[0]));
 			retry = 0;
 
@@ -60,7 +60,7 @@ SequenceSearch::Answer SequenceSearch::Search(const Problem& prob){
 					  << ((apply.reverse == true) ? "REVERSED" : "")
 			          << std::endl;
 
-			answer.push_back(cMat::MakeRotateMatrix(list[0].angle) * cMat::MakeMoveMatrix(list[0].pos.x,list[0].pos.y));
+			answer.push_back(apply);
 		}else{
 			if(retry < 10){
 				//再検索
@@ -71,7 +71,7 @@ SequenceSearch::Answer SequenceSearch::Search(const Problem& prob){
 			else{
 				retry = 0;
 				std::cout << p << "|NOT FOUND" << std::endl;
-				answer.push_back(cMat());
+				answer.push_back(TransParam());
 			}
 		}
 

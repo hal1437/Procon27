@@ -7,7 +7,7 @@ class InstantViewer{
 private:
 	BasicSearch* solver;
 	Problem problem;
-	std::vector<cMat> ans;
+	std::vector<TransParam> ans;
 
 public:
 
