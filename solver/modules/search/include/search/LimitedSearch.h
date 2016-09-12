@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <list>
+#include <limits>
 #include <search/BasicSearch.h>
 #include <search/Heuristic.hpp>
 
