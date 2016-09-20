@@ -16,7 +16,7 @@ int main(){
 	
 
 	//評価関数登録
-	h->AddHeuristic(new AreaHeuristic()  ,1);
+	h->AddHeuristic(new AreaHeuristic()  ,0);
 	h->AddHeuristic(new LengthHeuristic(),1);
 
 	//問題作成
