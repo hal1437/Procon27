@@ -18,5 +18,15 @@ public:
 	static Problem MakeEqualAreaProblem();
 	
 	//三角問題作成
-	static Problem MakeTriangleProblem();
+	//+フレーム生成範囲
+	//+辺上の頂点の生成数範囲
+	//+辺上の頂点の揺らぎ
+	//+点の生成密度
+	//+枠の幅
+	//+枠の高さ
+	static Problem MakeTriangleProblem(const Range<int> edge_div_range = Range<int>(6,4),
+									   const int        edge_div_round = 10,
+									   const int        density        = 80,
+									   const int        frame_width    = 400,
+									   const int        frame_height   = 400);
 };

@@ -18,18 +18,22 @@ Problem ProblemMaker::MakeEqualAreaProblem(){
 	return prob;
 }
 
-Problem ProblemMaker::MakeTriangleProblem(){
+Problem ProblemMaker::MakeTriangleProblem(const Range<int> edge_div_range,
+                                          const int        edge_div_round,
+                                          const int        density       ,
+                                          const int        frame_width   ,
+                                          const int        frame_height  ){
 	Problem prob;
 	std::random_device rd;
 
-	const Range<Point_i> frame_range(Point_i(400,400),Point_i(300,300));  //フレーム生成範囲
-	const Range<int>   edge_div_range(6,4);                               //辺上の頂点の生成数範囲
-	const int edge_div_round = 10;                                        //辺上の頂点の揺らぎ
-	const int density = 80;                                               //点の生成密度
-
-	const int frame_width  = rd() % frame_range.diff().x  + frame_range.min.y;//枠の幅
-	const int frame_height = rd() % frame_range.diff().y  + frame_range.min.x;//枠の高さ
-
+// 	const Range<Point_i> frame_range(Point_i(400,400),Point_i(300,300));  //フレーム生成範囲
+// 	const Range<int>   edge_div_range(6,4);                               //辺上の頂点の生成数範囲
+// 	const int edge_div_round = 10;                                        //辺上の頂点の揺らぎ
+// 	const int density = 80;                                               //点の生成密度
+//
+// 	const int frame_width  = rd() % frame_range.diff().x  + frame_range.min.y;//枠の幅
+// 	const int frame_height = rd() % frame_range.diff().y  + frame_range.min.x;//枠の高さ
+//
 	int frame_points;//フレームの数
 
 	std::vector<Point> points;              //生成された頂点

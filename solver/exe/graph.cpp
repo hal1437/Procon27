@@ -15,7 +15,7 @@ int main(){
 	std::cout << "---Graph Algorithm Test---" << std::endl;
 	
 
-	Problem problem = ProblemMaker::MakeTriangleProblem();
+	Problem problem = ProblemMaker::MakeTriangleProblem(Range<int>(2,1),10,150);
 	Polygon polygon;
 	Polygon pp;
 	pp.addNode(Point(0  , 0));
