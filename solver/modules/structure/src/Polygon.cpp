@@ -162,6 +162,15 @@ bool Polygon::setNode(int index,const Point& pos){
 		return true;
 	}
 }
+bool Polygon::removeNode(int index){
+	if(index < 0 || this->v.size() <= index){
+		std::cout << "[Polygon.cpp] index = \"" << index << "\" overran in Polygon::removeNode" << std::endl;
+		return false;
+	}else{
+		this->v.erase(v.begin()+index);
+		return true;
+	}
+}
 void Polygon::Print(std::ostream& ost)const{
 	ost << "vertex:" << this->v.size() << std::endl;
 	for(int i=0;i<this->v.size();i++){

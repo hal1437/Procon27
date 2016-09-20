@@ -53,6 +53,8 @@ public:
 	Point getNode(int index)const;
 	//頂点設定
 	bool setNode(int index,const Point& pos);
+	//頂点削除
+	bool removeNode(int index);
 
 	//出力
 	virtual void Print(std::ostream& ost)const;
