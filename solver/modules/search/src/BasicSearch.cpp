@@ -3,6 +3,11 @@
 #define LoopRenge(x,r) ((x+r)%r)
 #define LR(x,r) (LoopRenge(x,r))
 
+
+double BasicSearch::Length(const Point& lhs,const Point& rhs){
+	return std::sqrt(std::pow(lhs.x - rhs.x,2) + std::pow(lhs.y - rhs.y,2));
+}
+
 std::vector<TransParam> BasicSearch::Listup(const Polygon& frame,int frame_index, const Polygon& piece){
 	//多角形の頂点を枠の頂点に一致させる。
 	std::vector<TransParam> answer;
@@ -44,14 +49,13 @@ std::vector<TransParam> BasicSearch::Listup(const Polygon& frame,int frame_index
 	}
 	//範囲外のものは除く
 	int old = answer.size();
-	int index = 0;
 	for(int i = 0;i<answer.size();i++){
 		Polygon trans = BasicSearch::Transform(piece,answer[i]);
 		bool is_over = false;
 
 		//変形後の全ての頂点がframeに内包されていれば
 		for(int j=0;j<trans.size();j++){
-			if(trans.getNode(j) == frame.getNode(frame_index))continue;
+ 			if(trans.getNode(j) == frame.getNode(frame_index))continue;
 			if(frame.isComprehension(trans.getNode(j))==false){
 				is_over = true;
 				break;
@@ -61,7 +65,7 @@ std::vector<TransParam> BasicSearch::Listup(const Polygon& frame,int frame_index
 		for(int j=0;j<frame.size();j++){
 			for(int k=0;k<trans.size();k++){
 				if(isCrossed(frame.getNode(j),frame.getNode((j+1)%frame.size()),
-				             trans.getNode(k),trans.getNode((k+1)%piece.size()))){
+				             trans.getNode(k),trans.getNode((k+1)%trans.size()))){
 					is_over = true;
 // 					std::cout << "crossed"  << i << ":" << j << ":" << k << std::endl;
 					break;
@@ -80,45 +84,81 @@ std::vector<TransParam> BasicSearch::Listup(const Polygon& frame,int frame_index
 }
 Polygon BasicSearch::Merge(const Polygon& frame, const Polygon& poly){
 	Polygon answer = frame;
+	bool isMerged = false;
 
 	for(int i=0;i<frame.size();i++){
 		for(int j=0;j<poly.size();j++){
 			//一致点
-			if(frame.getNode(i) == poly.getNode(j)){
-				Point v1 = poly .getNode(LR(j-1,poly  .size())) - poly .getNode(j);
-				Point v2 = poly .getNode(LR(j+1,poly  .size())) - poly .getNode(j);
-				Point f1 = frame.getNode(LR(i-1,frame .size())) - frame.getNode(i);
-				Point f2 = frame.getNode(LR(i+1,frame .size())) - frame.getNode(i);
-				
-				//v1とf1の傾きがほぼ等しい( |PI-x| > PI-eps )
-				if(std::abs(M_PI - Point::getAngle2Vec(v1,f1)) > M_PI - SAME_ANGLE_EPS){
-					//一致点の前に正順入れ
-					for(int k=1;k<poly.size();k++){
-						answer.addNode(i,poly.getNode(LR(j+k,poly.size())));
+			if(Length(frame.getNode(i) , poly.getNode(j)) < SAME_POINT_EPS){
+				//まだマージされていなければ
+				if(!isMerged){
+					Point v1 = poly .getNode(LR(j-1,poly  .size())) - poly .getNode(j);
+					Point v2 = poly .getNode(LR(j+1,poly  .size())) - poly .getNode(j);
+					Point f1 = frame.getNode(LR(i-1,frame .size())) - frame.getNode(i);
+					Point f2 = frame.getNode(LR(i+1,frame .size())) - frame.getNode(i);
+					const double SAME_POINT_EPS = 1.0e-12;
+					bool fitting = false;
+					bool reverse_insert = false;
+					bool back_index = false;
+
+					
+					//フィッティング
+					if(std::abs(M_PI - Point::getAngle2Vec(v1,f1)) > M_PI - SAME_ANGLE_EPS &&
+					std::abs(M_PI - Point::getAngle2Vec(v2,f2)) > M_PI - SAME_ANGLE_EPS){
+						reverse_insert = false;
+						fitting = true;
+						std::cout << "fit1" << std::endl;
+					}else
+					if(std::abs(M_PI - Point::getAngle2Vec(v1,f2)) > M_PI - SAME_ANGLE_EPS &&
+					std::abs(M_PI - Point::getAngle2Vec(v2,f1)) > M_PI - SAME_ANGLE_EPS){
+						reverse_insert = true;
+						fitting = true;
+						std::cout << "fit2" << std::endl;
 					}
-				}else 
-				//v1とf2の傾きがほぼ等しい
-				if(std::abs(M_PI - Point::getAngle2Vec(v1,f2)) > M_PI - SAME_ANGLE_EPS){
-					//一致点の前に逆順入れ
-					for(int k=poly.size()-1;k!=0;k--){
-						answer.addNode(i+1,poly.getNode(LR(j+k,poly.size())));
+					else if(std::abs(M_PI - Point::getAngle2Vec(v1,f1)) > M_PI - SAME_ANGLE_EPS)reverse_insert = false,back_index = false;
+					else if(std::abs(M_PI - Point::getAngle2Vec(v1,f2)) > M_PI - SAME_ANGLE_EPS)reverse_insert = true ,back_index = true ;
+					else if(std::abs(M_PI - Point::getAngle2Vec(v2,f1)) > M_PI - SAME_ANGLE_EPS)reverse_insert = true ,back_index = false;
+					else if(std::abs(M_PI - Point::getAngle2Vec(v2,f2)) > M_PI - SAME_ANGLE_EPS)reverse_insert = false,back_index = true ;
+					else{
+						std::cout << "== NO MATCHING EXCEPTION ==" << std::endl;
+						std::cout << "v1:" << v1 << std::endl;
+						std::cout << "v2:" << v2 << std::endl;
+						std::cout << "f1:" << f1 << std::endl;
+						std::cout << "f2:" << f2 << std::endl;
+						std::cout << "v1,f1:" << Point::getAngle2Vec(v1,f1) << std::endl;
+						std::cout << "v2,f1:" << Point::getAngle2Vec(v2,f1) << std::endl;
+						std::cout << "v1,f2:" << Point::getAngle2Vec(v1,f2) << std::endl;
+						std::cout << "v2,f2:" << Point::getAngle2Vec(v2,f2) << std::endl;
+						std::cout << "===========================" << std::endl;
+						return answer;
 					}
-				}else
-				//v2とf1の傾きがほぼ等しい
-				if(std::abs(M_PI - Point::getAngle2Vec(v2,f1)) > M_PI - SAME_ANGLE_EPS){
-					//一致点の後ろにに逆順入れ
-					for(int k=poly.size()-1;k!=0;k--){
-						answer.addNode(i,poly.getNode(LR(j+k,poly.size())));
+
+
+					//実際に追加
+					Point add_p;
+					int add_index;
+					if(reverse_insert){
+						//逆順追加
+						for(int k=poly.size()-1;k!=0;k--){
+							if(fitting && k==1)answer.setNode(i+1,poly.getNode(LR(j+k,poly.size())));
+							else{
+								Point add = poly.getNode(LR(j+k,poly.size()));
+								add_index = i + (back_index ? 1 : 0);
+								answer.addNode(add_index,add);
+							}
+						}
+					}else{
+						//正順追加
+						for(int k=1;k<poly.size();k++){
+							if(fitting && k==1)answer.setNode(i,poly.getNode(LR(j+k,poly.size())));
+							else    {
+								Point add = poly.getNode(LR(j+k,poly.size()));
+								add_index = i + (back_index ? 1 : 0);
+								answer.addNode(add_index,add);
+							}
+						}
 					}
-				}else
-				//v2とf2の傾きがほぼ等しい
-				if(std::abs(M_PI - Point::getAngle2Vec(v2,f2)) > M_PI - SAME_ANGLE_EPS){
-					//一致点の後ろに正順入れ
-					for(int k=1;k<poly.size();k++){
-						answer.addNode(i+1,poly.getNode(LR(j+k,poly.size())));
-					}
-				}else{
-					std::cout << "== NO MATCHING EXCEPTION ==" << std::endl;
+					std::cout << "======= INFOMATION =======" << std::endl;
 					std::cout << "v1:" << v1 << std::endl;
 					std::cout << "v2:" << v2 << std::endl;
 					std::cout << "f1:" << f1 << std::endl;
@@ -128,13 +168,21 @@ Polygon BasicSearch::Merge(const Polygon& frame, const Polygon& poly){
 					std::cout << "v1,f2:" << Point::getAngle2Vec(v1,f2) << std::endl;
 					std::cout << "v2,f2:" << Point::getAngle2Vec(v2,f2) << std::endl;
 					std::cout << "===========================" << std::endl;
-				}	
-				
-				return answer;
+					isMerged = true;
+				}else{
+					//同一点を削除
+					for(int k=0;k<answer.size();k++){
+						if(answer.getNode(k) == poly.getNode(j)){
+							answer.removeNode(k);
+							break;
+						}
+					}
+				}
 			}
 		}
 	}
-	std::cout << "Can't merged..." << std::endl;
+	std::cout << answer.size() << std::endl;
+// 	std::cout << "Can't merged..." << std::endl;
 	return answer;
 }
 

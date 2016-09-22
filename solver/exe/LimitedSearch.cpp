@@ -16,11 +16,13 @@ int main(){
 	
 
 	//評価関数登録
-	h->AddHeuristic(new AreaHeuristic()  ,0);
-	h->AddHeuristic(new LengthHeuristic(),1);
+	h->AddHeuristic(new AreaHeuristic()  ,1);
+	h->AddHeuristic(new LengthHeuristic(),0.5);
+	bs.AddHeuristic(h);
 
 	//問題作成
-	Problem prob = ProblemMaker::MakeTriangleProblem();
+	Problem prob = ProblemMaker::MakeTriangleProblem(Range<int>(1,1),10,200);
+	std::cout << std::endl;
 
 	for(int i=0;i<prob.pieces.size();i++){
 		prob.pieces[i].normalize();

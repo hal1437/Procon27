@@ -29,7 +29,11 @@ public:
 	typedef std::vector<TransParam> Log;
 
 public:
-	constexpr static double SAME_ANGLE_EPS = 1 * (M_PI/180.0);
+	constexpr static double SAME_ANGLE_EPS = 1.0e-2;
+	constexpr static double SAME_POINT_EPS = 1.0e-10;
+
+	//点間距離
+	static double Length(const Point& lhs,const Point& rhs);
 
 	//頂点に対する変形のリストを取得
 	static std::vector<TransParam> Listup(const Polygon& frame,int frame_index, const Polygon& piece);

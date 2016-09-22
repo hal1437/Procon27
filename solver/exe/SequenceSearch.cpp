@@ -10,7 +10,7 @@ int main(){
 	InstantViewer viewer;
 
 	//問題作成
-	Problem prob = ProblemMaker::MakeTriangleProblem();
+	Problem prob = ProblemMaker::MakeTriangleProblem(Range<int>(1,1),10,200);
 
 	for(int i=0;i<prob.pieces.size();i++){
 		prob.pieces[i].normalize();

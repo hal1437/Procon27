@@ -39,12 +39,12 @@ LimitedSearch::Answer LimitedSearch::Search(const Problem& prob){
 	queue.push_back(Node{prob.frame,std::numeric_limits<int>::max(),std::vector<std::pair<TransParam,int>>()});
 
 	//ステップが最後になるまで
-	while(index != prob.pieces.size()-1){
+	while(index < prob.pieces.size()){
 	
 		std::cout << queue.front().step() << std::endl;
 
 		//深さループ
-		for(int d = 0;d < DEPTH_LIMIT && index + d < prob.pieces.size();d++){
+		for(int d = 0;d < DEPTH_LIMIT && index < prob.pieces.size();d++){
 			int queue_size = queue.size();//キューのサイズ
 			for(int q=0;q<queue_size;q++){
 				Node node = queue.front(); //先頭取り出し
@@ -77,7 +77,7 @@ LimitedSearch::Answer LimitedSearch::Search(const Problem& prob){
 					}
 				}
 			}
-			
+			std::cout << "経過:" << index + d << ":" << queue.size()<< std::endl;
 			index++;
 		}
 
@@ -87,6 +87,7 @@ LimitedSearch::Answer LimitedSearch::Search(const Problem& prob){
 		});
 		
 		std::cout << "trim:" << queue.size() << std::endl;
+		std::cout << "BestScore:" << queue.front().h_val << std::endl;
 		//探索幅まで縮小
 		if(queue.size() > WIDTH_LIMIT){
 			queue.erase(std::next(queue.begin() , WIDTH_LIMIT),queue.end());
@@ -95,9 +96,13 @@ LimitedSearch::Answer LimitedSearch::Search(const Problem& prob){
 	}
 
 	std::cout << "finished" << std::endl;
+	if(queue.size()==0){
+		while(1);
+	}
 	for(auto aa : queue.front().hands){
 		std::cout << aa.second << std::endl;
 	}
+	std::cout << "next" << std::endl;
 	for(int i=0;i<prob.pieces.size();i++){
 		auto it = std::find_if(queue.front().hands.begin(),queue.front().hands.end(),[&](std::pair<TransParam,int>& v){
 			return (v.second == i);
