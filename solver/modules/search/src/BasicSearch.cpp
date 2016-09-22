@@ -158,16 +158,16 @@ Polygon BasicSearch::Merge(const Polygon& frame, const Polygon& poly){
 							}
 						}
 					}
-					std::cout << "======= INFOMATION =======" << std::endl;
-					std::cout << "v1:" << v1 << std::endl;
-					std::cout << "v2:" << v2 << std::endl;
-					std::cout << "f1:" << f1 << std::endl;
-					std::cout << "f2:" << f2 << std::endl;
-					std::cout << "v1,f1:" << Point::getAngle2Vec(v1,f1) << std::endl;
-					std::cout << "v2,f1:" << Point::getAngle2Vec(v2,f1) << std::endl;
-					std::cout << "v1,f2:" << Point::getAngle2Vec(v1,f2) << std::endl;
-					std::cout << "v2,f2:" << Point::getAngle2Vec(v2,f2) << std::endl;
-					std::cout << "===========================" << std::endl;
+// 					std::cout << "======= INFOMATION =======" << std::endl;
+// 					std::cout << "v1:" << v1 << std::endl;
+// 					std::cout << "v2:" << v2 << std::endl;
+// 					std::cout << "f1:" << f1 << std::endl;
+// 					std::cout << "f2:" << f2 << std::endl;
+// 					std::cout << "v1,f1:" << Point::getAngle2Vec(v1,f1) << std::endl;
+// 					std::cout << "v2,f1:" << Point::getAngle2Vec(v2,f1) << std::endl;
+// 					std::cout << "v1,f2:" << Point::getAngle2Vec(v1,f2) << std::endl;
+// 					std::cout << "v2,f2:" << Point::getAngle2Vec(v2,f2) << std::endl;
+// 					std::cout << "===========================" << std::endl;
 					isMerged = true;
 				}else{
 					//同一点を削除

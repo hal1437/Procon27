@@ -21,6 +21,7 @@ void InstantViewer::View(){
 
 	int current=0;
 	bool used;
+	bool frame_view = false;
 	while (1){
 		cv::Mat screen = cv::Mat::zeros(600, 900, CV_8UC3);
 
@@ -58,7 +59,6 @@ void InstantViewer::View(){
 		}else{
 			cv::putText(screen,"Unused",cv::Point(720, 102),cv::FONT_HERSHEY_SIMPLEX,0.5,cv::Scalar(255,255,255), 1, CV_AA);
 		}
-		
 		cv::putText(screen,std::string("Original") ,cv::Point(600,200),cv::FONT_HERSHEY_SIMPLEX,0.5,cv::Scalar(255,255,255), 1, CV_AA);
 		cv::putText(screen,"Right or Left : change current index.   Esc:exit."    ,cv::Point( 50, 590),cv::FONT_HERSHEY_SIMPLEX,0.5,cv::Scalar(255,255,255), 1, CV_AA);
 
@@ -83,7 +83,7 @@ void InstantViewer::View(){
 
 		//現在のピースを描画
 		screen << problem.pieces[current] * cMat::MakeMoveMatrix(620,220);
-		if(used){
+		if(used && !frame_view){
 			screen << BasicSearch::Transform(problem.pieces[current],ans[current]) * cMat::MakeMoveMatrix(50,50);
 		}
 
@@ -95,6 +95,7 @@ void InstantViewer::View(){
 
 		//コントロール
 		int key = cv::waitKey(0);
+		if(key == 102  )frame_view = !frame_view;//Fキー
 		if(key == 63234)current--;  //左矢印キー
 		if(key == 63235)current++;  //右矢印キー
 		if(key == 27   )break;      //Escキー
