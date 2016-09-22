@@ -55,7 +55,7 @@ std::vector<TransParam> BasicSearch::Listup(const Polygon& frame,int frame_index
 
 		//変形後の全ての頂点がframeに内包されていれば
 		for(int j=0;j<trans.size();j++){
- 			if(trans.getNode(j) == frame.getNode(frame_index))continue;
+ 			if(Length(trans.getNode(j), frame.getNode(frame_index)) < SAME_POINT_EPS)continue;
 			if(frame.isComprehension(trans.getNode(j))==false){
 				is_over = true;
 				break;
@@ -77,12 +77,12 @@ std::vector<TransParam> BasicSearch::Listup(const Polygon& frame,int frame_index
 		if(is_over == true){
 			answer.erase(answer.begin()+i);
 			i--;
-		}else{
 		}
 	}
 	return answer;
 }
 Polygon BasicSearch::Merge(const Polygon& frame, const Polygon& poly){
+	std::cout << "MERGE PROCCESS" << std::endl;
 	Polygon answer = frame;
 	bool isMerged = false;
 
@@ -107,13 +107,13 @@ Polygon BasicSearch::Merge(const Polygon& frame, const Polygon& poly){
 					std::abs(M_PI - Point::getAngle2Vec(v2,f2)) > M_PI - SAME_ANGLE_EPS){
 						reverse_insert = false;
 						fitting = true;
-						std::cout << "fit1" << std::endl;
+// 						std::cout << "fit1" << std::endl;
 					}else
 					if(std::abs(M_PI - Point::getAngle2Vec(v1,f2)) > M_PI - SAME_ANGLE_EPS &&
 					std::abs(M_PI - Point::getAngle2Vec(v2,f1)) > M_PI - SAME_ANGLE_EPS){
 						reverse_insert = true;
 						fitting = true;
-						std::cout << "fit2" << std::endl;
+// 						std::cout << "fit2" << std::endl;
 					}
 					else if(std::abs(M_PI - Point::getAngle2Vec(v1,f1)) > M_PI - SAME_ANGLE_EPS)reverse_insert = false,back_index = false;
 					else if(std::abs(M_PI - Point::getAngle2Vec(v1,f2)) > M_PI - SAME_ANGLE_EPS)reverse_insert = true ,back_index = true ;
@@ -158,16 +158,16 @@ Polygon BasicSearch::Merge(const Polygon& frame, const Polygon& poly){
 							}
 						}
 					}
-// 					std::cout << "======= INFOMATION =======" << std::endl;
-// 					std::cout << "v1:" << v1 << std::endl;
-// 					std::cout << "v2:" << v2 << std::endl;
-// 					std::cout << "f1:" << f1 << std::endl;
-// 					std::cout << "f2:" << f2 << std::endl;
-// 					std::cout << "v1,f1:" << Point::getAngle2Vec(v1,f1) << std::endl;
-// 					std::cout << "v2,f1:" << Point::getAngle2Vec(v2,f1) << std::endl;
-// 					std::cout << "v1,f2:" << Point::getAngle2Vec(v1,f2) << std::endl;
-// 					std::cout << "v2,f2:" << Point::getAngle2Vec(v2,f2) << std::endl;
-// 					std::cout << "===========================" << std::endl;
+					std::cout << "======= INFOMATION =======" << std::endl;
+					std::cout << "v1:" << v1 << std::endl;
+					std::cout << "v2:" << v2 << std::endl;
+					std::cout << "f1:" << f1 << std::endl;
+					std::cout << "f2:" << f2 << std::endl;
+					std::cout << "v1,f1:" << Point::getAngle2Vec(v1,f1) << std::endl;
+					std::cout << "v2,f1:" << Point::getAngle2Vec(v2,f1) << std::endl;
+					std::cout << "v1,f2:" << Point::getAngle2Vec(v1,f2) << std::endl;
+					std::cout << "v2,f2:" << Point::getAngle2Vec(v2,f2) << std::endl;
+					std::cout << "===========================" << std::endl;
 					isMerged = true;
 				}else{
 					//同一点を削除
@@ -181,8 +181,8 @@ Polygon BasicSearch::Merge(const Polygon& frame, const Polygon& poly){
 			}
 		}
 	}
-	std::cout << answer.size() << std::endl;
-// 	std::cout << "Can't merged..." << std::endl;
+// 	std::cout << answer.size() << std::endl;
+	if(!isMerged)std::cout << "Can't merged..." << std::endl;
 	return answer;
 }
 

@@ -12,7 +12,7 @@ class LimitedSearch:public BasicSearch{
 private:
 	
 	const int WIDTH_LIMIT = 5;//探索幅
-	const int DEPTH_LIMIT = 2;//探索深さ
+	const int DEPTH_LIMIT = 1;//探索深さ
 
 	std::vector<Heuristic<Polygon>*> heuristic;
 

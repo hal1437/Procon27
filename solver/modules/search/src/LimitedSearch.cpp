@@ -41,7 +41,7 @@ LimitedSearch::Answer LimitedSearch::Search(const Problem& prob){
 	//ステップが最後になるまで
 	while(index < prob.pieces.size()){
 	
-		std::cout << queue.front().step() << std::endl;
+		std::cout << "======= " << index << " =======" << std::endl;
 
 		//深さループ
 		for(int d = 0;d < DEPTH_LIMIT && index < prob.pieces.size();d++){
@@ -61,14 +61,19 @@ LimitedSearch::Answer LimitedSearch::Search(const Problem& prob){
 
 						//リストアップ実施
 						std::vector<TransParam> list = Listup(node.frame,j,prob.pieces[i]);
-						list.push_back(TransParam());
+						//「置かない」を追加
+// 						TransParam empty;
+// 						empty.sub_index=-1;
+// 						list.push_back(empty);
 
 						//全てキューに追加
 						for(int k=0;k<list.size();k++){
 							//k番目の変形を適用
 							Node n;
-							if(k != list.size()-1)n.frame = Merge(node.frame,Transform(prob.pieces[i],list[k]));
-							else                  n.frame = node.frame;
+							if(list[k].sub_index != -1)n.frame = Merge(node.frame,Transform(prob.pieces[i],list[k]));
+							else                       n.frame = node.frame;
+							std::cout << "TransForm:" << list[k].pos << list[k].angle << std::endl;
+							std::cout << "Heuristic:" << n.h_val << std::endl;
 							n.h_val = GetHeuristic(n.frame);
 							n.hands = node.hands;
 							n.hands.push_back(std::make_pair(list[k],i));
