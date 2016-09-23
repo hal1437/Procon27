@@ -16,8 +16,8 @@ int main(){
 	
 
 	//評価関数登録
-	h->AddHeuristic(new AreaHeuristic()  ,0);
-	h->AddHeuristic(new LengthHeuristic(),1);
+	h->AddHeuristic(new AreaHeuristic()  ,1.0);
+	h->AddHeuristic(new LengthHeuristic(),0.3);
 	bs.AddHeuristic(h);
 
 	//問題作成

@@ -14,7 +14,6 @@ struct TransParam{
 	Point pos;    //平行移動量
 	bool reverse; //反転
 	double angle; //回転移動角
-
 };
 
 
@@ -30,7 +29,7 @@ public:
 
 public:
 	constexpr static double SAME_ANGLE_EPS = 1.0e-2;
-	constexpr static double SAME_POINT_EPS = 1.0e-10;
+	constexpr static double SAME_POINT_EPS = 1.0e-3;
 
 	//点間距離
 	static double Length(const Point& lhs,const Point& rhs);
