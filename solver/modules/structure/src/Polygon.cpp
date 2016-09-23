@@ -4,6 +4,17 @@
 #include <util/NearlyEqual.h>
 #include <algorithm>
 
+Point Polygon::PointRound(Point pos){
+	pos.x *= 10*ROUND_NUMERIC;
+	pos.y *= 10*ROUND_NUMERIC;
+	pos.x  = std::round(pos.x);
+	pos.y  = std::round(pos.y);
+	pos.x /= 10*ROUND_NUMERIC;
+	pos.y /= 10*ROUND_NUMERIC;
+	return pos;
+}
+
+
 //正規化
 bool Polygon::normalize(){
 	//第一頂点を原点とし、第二頂点を(1,0)方向へ回転させ、第三頂点を下側へ
@@ -145,11 +156,11 @@ Point Polygon::getNode(int index)const{
 
 //頂点追加
 bool Polygon::addNode(const Point& p){
-	this->v.push_back(p);
+	this->v.push_back(PointRound(p));
 	return true;
 }
 bool Polygon::addNode(size_t index,const Point& p){
-	this->v.insert(v.begin()+index,p);
+	this->v.insert(v.begin()+index,PointRound(p));
 	return true;
 }
 //頂点設定
@@ -158,7 +169,9 @@ bool Polygon::setNode(int index,const Point& pos){
 		std::cout << "[Polygon.cpp] index = \"" << index << "\" overran in Polygon::setNode" << std::endl;
 		return false;
 	}else{
-		this->v[index] = pos;
+
+		//四捨五入
+		this->v[index] = PointRound(pos);
 		return true;
 	}
 }
