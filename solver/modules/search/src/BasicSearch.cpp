@@ -174,7 +174,7 @@ Polygon BasicSearch::Merge(const Polygon& frame, const Polygon& poly){
 					if(reverse_insert){
 						//逆順追加
 						for(int k=poly.size()-1;k!=0;k--){
-							if(fitting && k==1)answer.setNode(i+1,poly.getNode(LR(j+k,poly.size())));
+							if(fitting && k==1)answer.setNode(i,poly.getNode(LR(j+k,poly.size())));
 							else{
 								Point add = poly.getNode(LR(j+k,poly.size()));
 								add_index = i + (back_index ? 1 : 0);
@@ -203,18 +203,21 @@ Polygon BasicSearch::Merge(const Polygon& frame, const Polygon& poly){
 					std::cout << "v2,f2:" << Point::getAngle2Vec(v2,f2) << std::endl;
 					std::cout << "===========================" << std::endl;
 					isMerged = true;
-				}else{
-					//同一点を削除
-					for(int k=0;k<answer.size();k++){
-						if(answer.getNode(k) == poly.getNode(j)){
-// 							answer.removeNode(k);
-							break;
-						}
-					}
 				}
 			}
 		}
 	}
+	//近似点削除
+	for(int i=0;i<answer.size();i++){
+		if(Length(answer.getNode(LR(i-1,answer.size())),
+		          answer.getNode(LR(i+1,answer.size()))) < 1.0 ||
+		   Length(answer.getNode(LR(i  ,answer.size())),
+		          answer.getNode(LR(i+1,answer.size()))) < 1.0){
+			answer.removeNode(i);
+			i=0;
+		}
+	}
+
 // 	std::cout << answer.size() << std::endl;
 	if(!isMerged)std::cout << "Can't merged..." << std::endl;
 	return answer;
