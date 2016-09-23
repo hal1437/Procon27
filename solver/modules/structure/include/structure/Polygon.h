@@ -22,7 +22,10 @@ class Polygon:public Printable{
 
 protected:
 
+	static const int ROUND_NUMERIC = 5;
 	std::vector<Point> v; //頂点座標
+
+	Point PointRound(const Point pos);
 
 public:
 
