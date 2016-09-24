@@ -29,7 +29,7 @@ public:
 
 public:
 	constexpr static double SAME_ANGLE_EPS = 1.0e-2;
-	constexpr static double SAME_POINT_EPS = 1.0e-3;
+	constexpr static double SAME_POINT_EPS = 1.0;
 
 	//点間距離
 	static double Length(const Point& lhs,const Point& rhs);

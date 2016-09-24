@@ -22,6 +22,7 @@ void InstantViewer::View(){
 	int current=0;
 	bool used;
 	bool frame_view = false;
+	bool all_view = false;
 	while (1){
 		cv::Mat screen = cv::Mat::zeros(600, 900, CV_8UC3);
 
@@ -60,33 +61,66 @@ void InstantViewer::View(){
 			cv::putText(screen,"Unused",cv::Point(720, 102),cv::FONT_HERSHEY_SIMPLEX,0.5,cv::Scalar(255,255,255), 1, CV_AA);
 		}
 		cv::putText(screen,std::string("Original") ,cv::Point(600,200),cv::FONT_HERSHEY_SIMPLEX,0.5,cv::Scalar(255,255,255), 1, CV_AA);
-		cv::putText(screen,"Right or Left : change current index.   Esc:exit."    ,cv::Point( 50, 590),cv::FONT_HERSHEY_SIMPLEX,0.5,cv::Scalar(255,255,255), 1, CV_AA);
+		cv::putText(screen,"Right or Left : change current index.   Esc:exit.  E:all_view  F:frame_view"    ,cv::Point( 50, 590),cv::FONT_HERSHEY_SIMPLEX,0.5,cv::Scalar(255,255,255), 1, CV_AA);
 
 		
-		Polygon current_frame = problem.frame;
 
-		//現在のフレームを計算
-		for(int i=0;i<=std::min(current,static_cast<int>(ans.size()));i++){
-			if(ans[i] == TransParam())continue;
-			Polygon poly = BasicSearch::Transform(problem.pieces[i],ans[i]);
-			current_frame = BasicSearch::Merge(current_frame,poly);
+		if(all_view){
+			
+			for(int i=0;i<=std::min(current,static_cast<int>(ans.size()));i++){
+				if(ans[i] == TransParam())continue;
+				Polygon poly = BasicSearch::Transform(problem.pieces[i],ans[i]) * cMat::MakeMoveMatrix(50,50);
+
+				//多角形を描画
+				cv::Point center;
+				screen << poly;
+				for(int j=0;j<poly.size();j++){
+					Point p1 = poly.getNode(j);
+					Point p2 = poly.getNode((j+1) % poly.size());
+					cv::line(screen, cv::Point(p1.x, p1.y), cv::Point(p2.x, p2.y), cv::Scalar(0,0,255), 1, CV_AA); 
+					center.x += p1.x;
+					center.y += p1.y;
+				}
+				center.x /= poly.size();
+				center.y /= poly.size();
+
+				//文字配置
+				std::stringstream index_ss;
+				index_ss << i;
+				cv::putText(screen,index_ss.str(),center,cv::FONT_HERSHEY_SIMPLEX,0.5,cv::Scalar(0,0,0), 1, CV_AA);
+
+
+			}
+			//フレームを描画
+			for(int i=0;i<problem.frame.size();i++){
+				Point p1 = problem.frame.getNode(i) + Point(50,50);
+				Point p2 = problem.frame.getNode((i+1) % problem.frame.size()) + Point(50,50);
+				cv::line(screen, cv::Point(p1.x, p1.y), cv::Point(p2.x, p2.y), cv::Scalar(0,255,255), 1, CV_AA); 
+			}
+// 			screen << problem.frame * cMat::MakeMoveMatrix(50,50);
+
+		}else{
+			Polygon current_frame = problem.frame;
+			//現在のフレームを計算
+			for(int i=0;i<=std::min(current,static_cast<int>(ans.size()));i++){
+				if(ans[i] == TransParam())continue;
+				Polygon poly = BasicSearch::Transform(problem.pieces[i],ans[i]);
+				current_frame = BasicSearch::Merge(current_frame,poly);
+			}
+
+			//フレームを描画
+			Point frame_offset(50,50);
+			for(int i=0;i<current_frame.size();i++){
+				Point p1 = current_frame.getNode(i)+frame_offset;
+				Point p2 = current_frame.getNode((i+1) % current_frame.size())+frame_offset;
+				cv::line(screen, cv::Point(p1.x, p1.y), cv::Point(p2.x, p2.y), cv::Scalar(0,(i+1)*30,255), 1, CV_AA); 
+			}
 		}
-
-		//フレームを描画
-		Point frame_offset(50,50);
-		for(int i=0;i<current_frame.size();i++){
-			Point p1 = current_frame.getNode(i)+frame_offset;
-			Point p2 = current_frame.getNode((i+1) % current_frame.size())+frame_offset;
-			cv::line(screen, cv::Point(p1.x, p1.y), cv::Point(p2.x, p2.y), cv::Scalar(0,(i+1)*30,255), 1, CV_AA); 
-		}
-
-
 		//現在のピースを描画
 		screen << problem.pieces[current] * cMat::MakeMoveMatrix(620,220);
-		if(used && !frame_view){
+		if(used && !frame_view && !all_view){
 			screen << BasicSearch::Transform(problem.pieces[current],ans[current]) * cMat::MakeMoveMatrix(50,50);
 		}
-
 
 		//表示
 		cv::namedWindow("InstantViewer", CV_WINDOW_AUTOSIZE|CV_WINDOW_FREERATIO);
@@ -96,6 +130,7 @@ void InstantViewer::View(){
 		//コントロール
 		int key = cv::waitKey(0);
 		if(key == 102  )frame_view = !frame_view;//Fキー
+		if(key == 101  )all_view   = !all_view;//Eキー
 		if(key == 63234)current--;  //左矢印キー
 		if(key == 63235)current++;  //右矢印キー
 		if(key == 27   )break;      //Escキー
