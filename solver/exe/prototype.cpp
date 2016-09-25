@@ -103,20 +103,14 @@ int main(){
 		//cv::drawContours(frame, contours, -1, cv::Scalar(0, 255, 0));
 
 		//直線近似
-		problem.pieces.erase(problem.pieces.begin(),problem.pieces.end());
+		std::vector<std::vector<cv::Point>> approxes;
 		for(auto contour = contours.begin(); contour != contours.end(); contour++){
 			std::vector<cv::Point> approx;
-			Polygon polygon;
 
 			//輪郭を直線近似する
 			cv::approxPolyDP(cv::Mat(*contour), approx, 3.0, true);
-			for(auto ite = approx.begin(); ite != approx.end(); ite++){
-				Point v;
-				cvPointToPoint(*ite, v);
-				polygon.addNode(v);
-			}
-			if(polygon.size()>=3){
-				problem.pieces.push_back(polygon);
+			if(approx.size() >= 3){
+				approxes.push_back(approx);
 				//近似した輪郭線を青で描画
 				cv::polylines(frame, approx, true, cv::Scalar(255, 0, 0));
 			}
@@ -134,6 +128,53 @@ int main(){
 			pause = !pause;
 		}
 		else if(CheckHitKey(key,'s') && nutoral){
+
+			//Problem型に変換
+			std::string ans;
+			Console::SetCursorPos(0,15);
+			std::cout << "フレームあり?(Y/N)->";
+			std::cin >> ans;
+			if(ans == "y" || ans == "Y"){
+				double max_area;
+				auto max_area_contour = approxes.begin();
+				for(int i = 0; i < 2; i++){
+					max_area_contour = approxes.begin();
+					max_area = contourArea(*max_area_contour);
+					for(auto approx = approxes.begin() + 1; approx != approxes.end(); approx++){
+						if(contourArea(*approx) > max_area){
+							max_area = contourArea(*approx);
+							max_area_contour = approx;
+						}
+					}
+					if(i == 1){
+						//Polygonに変換
+						Polygon polygon;
+						for(auto ite = (*max_area_contour).begin(); ite != (*max_area_contour).end(); ite++){
+							Point v;
+							cvPointToPoint(*ite, v);
+							polygon.addNode(v);
+						}
+						problem.frame = polygon;
+						cv::polylines(frame, *max_area_contour, true, cv::Scalar(0, 255, 0));
+					}
+					approxes.erase(max_area_contour);
+				}
+			}
+
+			problem.pieces.erase(problem.pieces.begin(),problem.pieces.end());
+			for(auto approx = approxes.begin(); approx != approxes.end(); approx++){
+				//Polygonに変換
+				Polygon polygon;
+				for(auto ite = (*approx).begin(); ite != (*approx).end(); ite++){
+					Point v;
+					cvPointToPoint(*ite, v);
+					polygon.addNode(v);
+				}
+				problem.pieces.push_back(polygon);
+				
+			}
+
+
 			//ピースの頂点情報の出力.
 			std::ofstream ofs("polygon_out.txt");
 			for(int i=0;i<problem.pieces.size();i++){
@@ -143,14 +184,15 @@ int main(){
 
 			//フレーム画像を保存する.
 			std::string filename;
-			Console::SetCursorPos(0,15);
-			std::cout << "ファイル名入力";
+			Console::SetCursorPos(0,16);
+			std::cout << "ファイル名入力->";
 			std::cin  >> filename;
 
 
 			if(filename + ".png" != image_file){
 				cv::imwrite(filename + ".png", frame);
-				std::cout << "セーブ完了[" << filename << ".png]" << std::endl;
+				cv::imwrite(filename + "_origin.png", origin);
+				std::cout << "セーブ完了[" << filename << ".png][" << filename << "_origin.png]" << std::endl;
 			}else{
 				std::cout << "上書きは勘弁して" << std::endl;
 			}
