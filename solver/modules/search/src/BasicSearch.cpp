@@ -49,7 +49,7 @@ std::vector<TransParam> BasicSearch::Listup(const Polygon& frame,int frame_index
 	}
 	//範囲外のものは除く
 	for(int i = 0;i<answer.size();i++){
-		cv::Mat screen = cv::Mat::zeros(600, 900, CV_8UC3);
+// 		cv::Mat screen = cv::Mat::zeros(600, 900, CV_8UC3);
 		Polygon trans = BasicSearch::Transform(piece,answer[i]);
 		bool is_over = false;
 
@@ -65,7 +65,7 @@ std::vector<TransParam> BasicSearch::Listup(const Polygon& frame,int frame_index
 			}
 			if(!isSame){
 				if(frame.isComprehension(trans.getNode(j))==false){
-					std::cout << "isNotComprehension:" << j << std::endl;
+// 					std::cout << "isNotComprehension:" << j << std::endl;
 					is_over = true;
 					break;
 				}
@@ -83,23 +83,23 @@ std::vector<TransParam> BasicSearch::Listup(const Polygon& frame,int frame_index
 					if(isCrossed(frame.getNode(j),frame.getNode((j+1)%frame.size()),
 								trans.getNode(k),trans.getNode((k+1)%trans.size()))){
 						is_over = true;
-						std::cout << "crossed"  << i << ":" << j << ":" << k << std::endl;
+// 						std::cout << "crossed"  << i << ":" << j << ":" << k << std::endl;
 						break;
 					}
 				}
 			}
 		}
-		std::cout << trans << std::endl;
-		std::cout << (is_over? "('A`)":"（　＾ω＾）") << std::endl;
+// 		std::cout << trans << std::endl;
+// 		std::cout << (is_over? "('A`)":"（　＾ω＾）") << std::endl;
 		//フレームを描画
-		Point frame_offset(50,50);
-		for(int i=0;i<frame.size();i++){
-			Point p1 = frame.getNode(i)+frame_offset;
-			Point p2 = frame.getNode((i+1) % frame.size())+frame_offset;
-			cv::line(screen, cv::Point(p1.x, p1.y), cv::Point(p2.x, p2.y), cv::Scalar(0,(i+1)*30,255), 1, CV_AA); 
-		}
-		//現在のピースを描画
-		screen << trans * cMat::MakeMoveMatrix(50,50);
+// 		Point frame_offset(50,50);
+// 		for(int i=0;i<frame.size();i++){
+// 			Point p1 = frame.getNode(i)+frame_offset;
+// 			Point p2 = frame.getNode((i+1) % frame.size())+frame_offset;
+// 			cv::line(screen, cv::Point(p1.x, p1.y), cv::Point(p2.x, p2.y), cv::Scalar(0,(i+1)*30,255), 1, CV_AA); 
+// 		}
+// 		//現在のピースを描画
+// 		screen << trans * cMat::MakeMoveMatrix(50,50);
 
 		//表示
 // 		cv::namedWindow("InstantViewer", CV_WINDOW_AUTOSIZE|CV_WINDOW_FREERATIO);
@@ -141,13 +141,13 @@ Polygon BasicSearch::Merge(const Polygon& frame, const Polygon& poly){
 					std::abs(M_PI - Point::getAngle2Vec(v2,f2)) > M_PI - SAME_ANGLE_EPS){
 						reverse_insert = false;
 						fitting = true;
-						std::cout << "fit1" << std::endl;
+// 						std::cout << "fit1" << std::endl;
 					}else
 					if(std::abs(M_PI - Point::getAngle2Vec(v1,f2)) > M_PI - SAME_ANGLE_EPS &&
 					std::abs(M_PI - Point::getAngle2Vec(v2,f1)) > M_PI - SAME_ANGLE_EPS){
 						reverse_insert = true;
 						fitting = true;
-						std::cout << "fit2" << std::endl;
+// 						std::cout << "fit2" << std::endl;
 					}
 					else if(std::abs(M_PI - Point::getAngle2Vec(v1,f1)) > M_PI - SAME_ANGLE_EPS)reverse_insert = false,back_index = false;//,std::cout << "Merge1" << std::endl;
 					else if(std::abs(M_PI - Point::getAngle2Vec(v1,f2)) > M_PI - SAME_ANGLE_EPS)reverse_insert = true ,back_index = true ;//,std::cout << "Merge2" << std::endl;
@@ -192,16 +192,16 @@ Polygon BasicSearch::Merge(const Polygon& frame, const Polygon& poly){
 							}
 						}
 					}
-					std::cout << "======= INFOMATION =======" << std::endl;
-					std::cout << "v1:" << v1 << std::endl;
-					std::cout << "v2:" << v2 << std::endl;
-					std::cout << "f1:" << f1 << std::endl;
-					std::cout << "f2:" << f2 << std::endl;
-					std::cout << "v1,f1:" << Point::getAngle2Vec(v1,f1) << std::endl;
-					std::cout << "v2,f1:" << Point::getAngle2Vec(v2,f1) << std::endl;
-					std::cout << "v1,f2:" << Point::getAngle2Vec(v1,f2) << std::endl;
-					std::cout << "v2,f2:" << Point::getAngle2Vec(v2,f2) << std::endl;
-					std::cout << "===========================" << std::endl;
+// 					std::cout << "======= INFOMATION =======" << std::endl;
+// 					std::cout << "v1:" << v1 << std::endl;
+// 					std::cout << "v2:" << v2 << std::endl;
+// 					std::cout << "f1:" << f1 << std::endl;
+// 					std::cout << "f2:" << f2 << std::endl;
+// 					std::cout << "v1,f1:" << Point::getAngle2Vec(v1,f1) << std::endl;
+// 					std::cout << "v2,f1:" << Point::getAngle2Vec(v2,f1) << std::endl;
+// 					std::cout << "v1,f2:" << Point::getAngle2Vec(v1,f2) << std::endl;
+// 					std::cout << "v2,f2:" << Point::getAngle2Vec(v2,f2) << std::endl;
+// 					std::cout << "===========================" << std::endl;
 					isMerged = true;
 				}
 			}
