@@ -4,6 +4,17 @@
 #include <util/NearlyEqual.h>
 #include <algorithm>
 
+Point Polygon::PointRound(Point pos){
+	pos.x *= 10*ROUND_NUMERIC;
+	pos.y *= 10*ROUND_NUMERIC;
+	pos.x  = std::round(pos.x);
+	pos.y  = std::round(pos.y);
+	pos.x /= 10*ROUND_NUMERIC;
+	pos.y /= 10*ROUND_NUMERIC;
+	return pos;
+}
+
+
 //正規化
 bool Polygon::normalize(){
 	//第一頂点を原点とし、第二頂点を(1,0)方向へ回転させ、第三頂点を下側へ
@@ -68,8 +79,14 @@ Polygon Polygon::getReverse()const{
 
 //面積算出
 double Polygon::getArea()const{
-	//ググって探す
-	return 0;
+	double score=0;
+	//全ての点間距離の総和
+	for(int i=0;i<this->size();i++){
+		int i_ = (i+1) % this->size();
+		score += (this->getNode(i).x - this->getNode(i_).x) * 
+		         (this->getNode(i).y + this->getNode(i_).y);
+	}
+	return score/2.0;
 }
 //角度算出
 double Polygon::getAngle(int index)const{
@@ -105,6 +122,20 @@ bool Polygon::ConfirmNumbers(){
 	return true;
 }
 
+//内包
+bool Polygon::isComprehension(const Point& p)const{
+	if(std::find(v.begin(),v.end(),p) !=v.end())return true;
+
+	double sum = 0;
+	for(int i=0;i<this->size();i++){
+		double angle = Point::getAngle2Vec(v[i]-p,v[(i+1)%this->size()]-p);
+		if(angle > M_PI)angle = angle - 2*M_PI;
+		sum += angle;
+// 		std::cout << angle*180/M_PI << "[deg]" << std::endl;
+	}
+// 	std::cout << sum*180/M_PI << "[deg]" << std::endl;
+	return (std::abs(sum*180/M_PI-360) < 0.01f);
+}
 
 
 //頂点追加
@@ -125,11 +156,11 @@ Point Polygon::getNode(int index)const{
 
 //頂点追加
 bool Polygon::addNode(const Point& p){
-	this->v.push_back(p);
+	this->v.push_back(PointRound(p));
 	return true;
 }
 bool Polygon::addNode(size_t index,const Point& p){
-	this->v.insert(v.begin()+index,p);
+	this->v.insert(v.begin()+index,PointRound(p));
 	return true;
 }
 //頂点設定
@@ -138,7 +169,18 @@ bool Polygon::setNode(int index,const Point& pos){
 		std::cout << "[Polygon.cpp] index = \"" << index << "\" overran in Polygon::setNode" << std::endl;
 		return false;
 	}else{
-		this->v[index] = pos;
+
+		//四捨五入
+		this->v[index] = PointRound(pos);
+		return true;
+	}
+}
+bool Polygon::removeNode(int index){
+	if(index < 0 || this->v.size() <= index){
+		std::cout << "[Polygon.cpp] index = \"" << index << "\" overran in Polygon::removeNode" << std::endl;
+		return false;
+	}else{
+		this->v.erase(v.begin()+index);
 		return true;
 	}
 }
