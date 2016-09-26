@@ -45,3 +45,10 @@ target_link_libraries(limited search)
 target_link_libraries(limited ${OpenCV_LIBS})
 message(STATUS "  limited")
 
+add_executable(master master.cpp)
+target_link_libraries(master ${OpenCV_LIBS})
+target_link_libraries(master util)
+target_link_libraries(master structure)
+target_link_libraries(master search)
+message(STATUS "  master")
+
