@@ -6,7 +6,7 @@
 
 int main(){
 	std::string str = "HELLO  WORLD";
-	std::string author = "Hal Stroemeria";
+	std::string author = "Yuya Omi";
 
 	//枠を描画
 	std::cout << "==================================================\n"

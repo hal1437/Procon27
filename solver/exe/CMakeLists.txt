@@ -26,6 +26,12 @@ target_link_libraries(matrix structure)
 target_link_libraries(matrix ${OpenCV_LIBS})
 message(STATUS "  matrix")
 
+add_executable(prototype prototype.cpp)
+target_link_libraries(prototype ${OpenCV_LIBS})
+target_link_libraries(prototype util)
+target_link_libraries(prototype structure)
+message(STATUS "  prototype")
+
 
 add_executable(sequence SequenceSearch.cpp)
 target_link_libraries(sequence structure)
