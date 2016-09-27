@@ -21,11 +21,16 @@ target_link_libraries(capture_test ${OpenCV_LIBS})
 target_link_libraries(capture_test util)
 message(STATUS "  capture_test")
 
+if(TBB_FOUND)
+  add_executable(TBB_test TBB_test.cpp)
+  target_link_libraries(TBB_test ${TBB_LIBRARIES})
+  message(STATUS "  TBB_test")
+endif()
+
 add_executable(matrix matrix.cpp)
 target_link_libraries(matrix structure)
 target_link_libraries(matrix ${OpenCV_LIBS})
 message(STATUS "  matrix")
-
 
 add_executable(sequence SequenceSearch.cpp)
 target_link_libraries(sequence structure)
@@ -37,5 +42,8 @@ add_executable(limited LimitedSearch.cpp)
 target_link_libraries(limited structure)
 target_link_libraries(limited search)
 target_link_libraries(limited ${OpenCV_LIBS})
+if(TBB_FOUND)
+  target_link_libraries(limited ${TBB_LIBRARIES})
+endif()
 message(STATUS "  limited")
 
