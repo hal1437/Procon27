@@ -16,7 +16,6 @@ bool Polygon::normalize(){
 
 	//回転変換
 	double angle = Point::getAngle2Vec(Point(-1,0),this->getNode(1));
-	std::cout << "angle:" << angle * 180 / M_PI << std::endl;
 	for(int i=0;i<this->size();i++){
 		this->setNode(i,this->getNode(i).getRotate(angle));
 	}
@@ -36,10 +35,35 @@ bool Polygon::normalize(){
 }
 
 Polygon Polygon::getNormalize()const{
-	Polygon p;
+	Polygon p = (*this);
 	p.normalize();
 	return p;
 }
+
+//反転
+bool Polygon::reverse(){
+	
+	//0から1へのベクトルをPoint(1,0)方向に変換
+	Point base = this->getNode(0);
+	double base_angle = Point::getAngle2Vec(Point(1,0),this->getNode(1)-base);
+
+	//全ての頂点に対して回転移動しのY軸を反転
+	for(int i=0;i<this->size();i++){
+		this->setNode(i,this->getNode(i) - base);
+		this->setNode(i,this->getNode(i).getRotate(base_angle));
+		this->setNode(i,Point(this->getNode(i).x,-this->getNode(i).y));
+		this->setNode(i,this->getNode(i).getRotate(-base_angle));
+		this->setNode(i,this->getNode(i) + base);
+	}
+	return true;
+}
+
+Polygon Polygon::getReverse()const{
+	Polygon p = (*this);
+	p.reverse();
+	return p;
+}
+
 
 
 //面積算出
@@ -92,7 +116,7 @@ size_t Polygon::size()const{
 Point Polygon::getNode(int index)const{
 	if(index < 0 || this->v.size() <= index){
 		//範囲外であれば
-		std::cout << "[Polygon.cpp] Index overran in Polygon::getPoint" << std::endl;
+		std::cout << "[Polygon.cpp] index = \"" << index << "\" overran in Polygon::getNode" << std::endl;
 		return Point();
 	}else{
 		return this->v[index];
@@ -111,7 +135,7 @@ bool Polygon::addNode(size_t index,const Point& p){
 //頂点設定
 bool Polygon::setNode(int index,const Point& pos){
 	if(index < 0 || this->v.size() <= index){
-		std::cout << "[Polygon.cpp] Index overran in Polygon::setPoint" << std::endl;
+		std::cout << "[Polygon.cpp] index = \"" << index << "\" overran in Polygon::setNode" << std::endl;
 		return false;
 	}else{
 		this->v[index] = pos;
