@@ -6,7 +6,6 @@
 #include <util/Console.h>
 #include <string>
 
-
 bool CheckHitKey(int key,char c);
 void cvPointToPoint(cv::Point &cvpoint, Point &point);
 

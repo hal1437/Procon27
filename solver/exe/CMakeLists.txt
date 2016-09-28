@@ -30,6 +30,7 @@ add_executable(prototype prototype.cpp)
 target_link_libraries(prototype ${OpenCV_LIBS})
 target_link_libraries(prototype util)
 target_link_libraries(prototype structure)
+target_link_libraries(prototype capture)
 message(STATUS "  prototype")
 
 
