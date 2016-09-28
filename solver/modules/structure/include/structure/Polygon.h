@@ -22,7 +22,10 @@ class Polygon:public Printable{
 
 protected:
 
+	static const int ROUND_NUMERIC = 5;
 	std::vector<Point> v; //頂点座標
+
+	Point PointRound(const Point pos);
 
 public:
 
@@ -41,6 +44,9 @@ public:
 	//番号調整
 	bool ConfirmNumbers();
 
+	//内包
+	bool isComprehension(const Point& p)const;
+
 	//頂点数取得
 	size_t size()const;
 	//頂点追加
@@ -50,6 +56,8 @@ public:
 	Point getNode(int index)const;
 	//頂点設定
 	bool setNode(int index,const Point& pos);
+	//頂点削除
+	bool removeNode(int index);
 
 	//出力
 	virtual void Print(std::ostream& ost)const;

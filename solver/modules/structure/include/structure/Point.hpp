@@ -152,6 +152,8 @@ double _Point<Type>::getAngle2Vec(const _Point<Type>& v1,const _Point<Type>& v2)
 	//角度計算
 	double angle;
 	angle = std::acos((v1.x*v2.x+v1.y*v2.y)/(v1.size()*v2.size()));
+	if((v1.x*v2.x+v1.y*v2.y)/(v1.size()*v2.size())>1)angle = 0;
+
 	
 	if(isObtuse){
 		return 2*M_PI-angle;
