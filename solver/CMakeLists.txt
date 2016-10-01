@@ -39,6 +39,25 @@ else()
   message(STATUS "Notfound 'Qt5 library'")
 endif()
 
+# ArrayFire
+find_package(ArrayFire)
+if(ArrayFire_FOUND)
+	INCLUDE_DIRECTORIES(${ArrayFire_INCLUDE_DIRS})
+	message(STATUS "Found 'ArrayFire library'")
+	if(ArrayFire_CPU_FOUND)
+		message(STATUS "Found 'ArrayFire CPU library'")
+	endif()
+	if(ArrayFire_CUDA_FOUND)
+		message(STATUS "Found 'ArrayFire CUDA library'")
+	endif()
+	if(ArrayFire_OpenCL_FOUND)
+		message(STATUS "Found 'ArrayFire OpenCL library'")
+	endif()
+else()
+  message(STATUS "Notfound 'ArrayFire library'")
+endif()
+
+
 # 出力先を設定
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin CACHE PATH "Output directory for executables")
 set(LIBRARY_OUTPUT_PATH    ${CMAKE_BINARY_DIR}/lib CACHE PATH "Output directory for libraries")
