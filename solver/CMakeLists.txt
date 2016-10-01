@@ -42,6 +42,7 @@ endif()
 # ArrayFire
 find_package(ArrayFire)
 if(ArrayFire_FOUND)
+	add_definitions("-DUSE_ArrayFire")
 	INCLUDE_DIRECTORIES(${ArrayFire_INCLUDE_DIRS})
 	message(STATUS "Found 'ArrayFire library'")
 	if(ArrayFire_CPU_FOUND)

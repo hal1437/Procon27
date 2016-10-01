@@ -3,9 +3,9 @@
 
 Point   operator* (const Point&   p,const cMat& mat){
 	vMat v,after;
-	v(0,0) = p.x;
-	v(1,0) = p.y;
-	v(2,0) = 1.0;
+	v.setElement(0,0,p.x);
+	v.setElement(1,0,p.y);
+	v.setElement(2,0,1.0);
 	after = v * mat;
 	return Point(after(0,0),after(1,0));
 }

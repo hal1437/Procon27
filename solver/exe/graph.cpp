@@ -12,6 +12,7 @@
 
 int main(){
 
+    af::info();
 	std::cout << "---Graph Algorithm Test---" << std::endl;
 	
 
@@ -27,7 +28,7 @@ int main(){
 	for(Polygon p :problem.pieces){
 
 		std::cout << p;
-		img << p /** cMat::MakeRotateMatrix(M_PI/4) */* cMat::MakeMoveMatrix(100,100);
+		img << p * cMat::MakeRotateMatrix(M_PI/4) * cMat::MakeMoveMatrix(100,100);
 
 		cv::namedWindow("drawing", CV_WINDOW_AUTOSIZE|CV_WINDOW_FREERATIO);
 		cv::imshow("drawing", img);
