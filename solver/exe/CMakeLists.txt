@@ -27,6 +27,12 @@ if(TBB_FOUND)
   message(STATUS "  TBB_test")
 endif()
 
+if(ArrayFire_FOUND)
+  add_executable(ArrayFire_test ArrayFireTest.cpp)
+  target_link_libraries(ArrayFire_test ${ArrayFire_LIBRARIES})
+  message(STATUS "  ArrayFire_test")
+endif()
+
 add_executable(matrix matrix.cpp)
 target_link_libraries(matrix structure)
 target_link_libraries(matrix ${OpenCV_LIBS})
