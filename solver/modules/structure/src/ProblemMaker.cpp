@@ -249,13 +249,15 @@ Problem ProblemMaker::MakeTriangleProblem(const Range<int> edge_div_range,
 		areaSUM = 0;
 		for(int i=0;i<prob.pieces.size();i++){
 			areaSUM += prob.pieces[i].getArea();
+			std::cout << "Area:" << i << ":" << prob.pieces[i].getArea() << std::endl;
+			std::cout << prob.pieces[i] << std::endl;;
 		}
 		ans = prob;
 		
 		if(areaSUM == frame_height * frame_width)break;
 		else {
-			std::cout << "<再選定中>";
-			Console::MoveCursorPos(-50,-7);
+			std::cout << "                    <再選定中>" << areaSUM << ":" << frame_height*frame_width << "              \n";
+// 			Console::MoveCursorPos(-50,-7);
 		}
 	}while(1);
 

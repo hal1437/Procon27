@@ -85,8 +85,9 @@ double Polygon::getArea()const{
 		int i_ = (i+1) % this->size();
 		score += (this->getNode(i).x - this->getNode(i_).x) * 
 		         (this->getNode(i).y + this->getNode(i_).y);
+
 	}
-	return score/2.0;
+	return std::abs(score/2.0);
 }
 //角度算出
 double Polygon::getAngle(int index)const{
