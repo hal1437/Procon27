@@ -32,7 +32,7 @@ LimitedSearch::Answer LimitedSearch::Search(const Problem& prob){
 	//Polygon frame = prob.frame; //フレーム
 	LimitedSearch::Answer answer;  //回答
 	std::random_device rd;        //乱数生成器
-	std::list<Node> queue;//探索キュー
+	std::deque<Node> queue;//探索キュー
 
 	int index = 0;
 	//初期状態追加
@@ -91,7 +91,7 @@ LimitedSearch::Answer LimitedSearch::Search(const Problem& prob){
 		}
 
 		//評価順に昇順ソート
-		queue.sort([](const Node& lhs,const Node& rhs){
+		std::sort(queue.begin(),queue.end(),[](const Node& lhs,const Node& rhs){
 			return (lhs.h_val < rhs.h_val);
 		});
 		

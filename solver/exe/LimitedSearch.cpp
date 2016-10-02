@@ -21,7 +21,7 @@ int main(){
 	bs.AddHeuristic(h);
 
 	//問題作成
-	Problem prob = ProblemMaker::MakeTriangleProblem(Range<int>(3,2));
+	Problem prob = ProblemMaker::MakeTriangleProblem();
 	std::cout << std::endl;
 
 	for(int i=0;i<prob.pieces.size();i++){

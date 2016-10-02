@@ -20,6 +20,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/mo
 
 # C++コンパイル設定
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1y")        # C++14を有効化
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0")        # コンパイル時最適化を有効(O0:なし O1:ちょっと O2:結構 O3:すごい)
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")     # enable all warnings
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-sign-compare") # disable some warnings
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-type-limits")  # disable some warnings
@@ -45,7 +46,7 @@ endif()
 # ArrayFire
 find_package(ArrayFire)
 if(ArrayFire_FOUND)
-	add_definitions("-DUSE_ArrayFire")
+# 	add_definitions("-DUSE_ArrayFire")
 	INCLUDE_DIRECTORIES(${ArrayFire_INCLUDE_DIRS})
 	message(STATUS "Found 'ArrayFire library'")
 	if(ArrayFire_CPU_FOUND)

@@ -4,6 +4,7 @@
 #include <vector>
 #include <list>
 #include <limits>
+#include <deque>
 #include <search/BasicSearch.h>
 #include <search/Heuristic.hpp>
 
