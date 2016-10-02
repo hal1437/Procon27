@@ -17,11 +17,6 @@ int main(){
 	
 
 	Problem problem = ProblemMaker::MakeTriangleProblem(Range<int>(1,1),10,200);
-	double area = 0;
-	for(int i=0;i<problem.pieces.size();i++){
-		area += problem.pieces[i].getArea();
-	}
-	std::cout << area << std::endl;
 
 	std::cout << "三角問題" << std::endl;
 	cv::Mat img = cv::Mat::zeros(600, 600, CV_8UC3);
