@@ -15,8 +15,12 @@ endif()
 # コンパイラ表示
 message(STATUS "Compiler: ${CMAKE_CXX_COMPILER}")
 
+# モジュール追加
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
+
 # C++コンパイル設定
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1y")        # C++14を有効化
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0")        # コンパイル時最適化を有効(O0:なし O1:ちょっと O2:結構 O3:すごい)
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")     # enable all warnings
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-sign-compare") # disable some warnings
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-type-limits")  # disable some warnings
@@ -31,18 +35,18 @@ if(OpenCV_FOUND)
 endif()
 
 
-# Qt5存在確認
-find_package(Qt5Widgets)
-if(Qt5Widgets_FOUND)
-  message(STATUS "Found 'Qt5 library' : ${Qt5Widgets_VERSION}")
+# Intel TBB存在確認
+find_package(TBB)
+if(TBB_FOUND)
+  message(STATUS "Found 'TBB library' ${TBB_VERSION} ${TBB_LIBRARIES}")
 else()
-  message(STATUS "Notfound 'Qt5 library'")
+  message(STATUS "Notfound 'TBB library'")
 endif()
 
 # ArrayFire
 find_package(ArrayFire)
 if(ArrayFire_FOUND)
-	add_definitions("-DUSE_ArrayFire")
+# 	add_definitions("-DUSE_ArrayFire")
 	INCLUDE_DIRECTORIES(${ArrayFire_INCLUDE_DIRS})
 	message(STATUS "Found 'ArrayFire library'")
 	if(ArrayFire_CPU_FOUND)
