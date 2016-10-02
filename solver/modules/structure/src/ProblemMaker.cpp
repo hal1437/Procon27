@@ -254,7 +254,6 @@ Problem ProblemMaker::MakeTriangleProblem(const Range<int> edge_div_range,
 		
 		if(areaSUM == frame_height * frame_width)break;
 		else {
-			std::cout << "<再選定中>";
 			Console::MoveCursorPos(-50,-7);
 		}
 	}while(1);
