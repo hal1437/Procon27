@@ -138,7 +138,6 @@ bool Polygon::isComprehension(const Point& p)const{
 }
 
 
-//頂点追加
 size_t Polygon::size()const{
 	return this->v.size();
 }
@@ -169,7 +168,6 @@ bool Polygon::setNode(int index,const Point& pos){
 		std::cout << "[Polygon.cpp] index = \"" << index << "\" overran in Polygon::setNode" << std::endl;
 		return false;
 	}else{
-
 		//四捨五入
 		this->v[index] = PointRound(pos);
 		return true;
