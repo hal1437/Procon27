@@ -98,7 +98,7 @@ double Polygon::getAngle(int index)const{
 	}else{
 		Point v1 = this->getNode((index + this->size() + 1)%this->size()) - this->getNode(index);
 		Point v2 = this->getNode((index + this->size() - 1)%this->size()) - this->getNode(index);
-		return Point::getAngle2Vec(v1,v2);
+		return Point::getAngle2Vec(v2,v1);
 	}
 }
 
