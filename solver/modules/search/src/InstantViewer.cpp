@@ -26,19 +26,29 @@ void InstantViewer::View(){
 	while (1){
 		cv::Mat screen = cv::Mat::zeros(600, 900, CV_8UC3);
 
+		double fill_rate = 0;
+		double use_area  = 0;
+		for(int i=0;i<std::min(static_cast<int>(ans.size()),current+1);i++){
+			if(!(ans[i] == TransParam())){
+				use_area += BasicSearch::Transform(problem.pieces[i],ans[i]).getArea();
+			}
+		}
+		fill_rate = (use_area / problem.frame.getArea())*100;
+
 		//ピースを使用するかどうか
 		if(!(ans[current]==TransParam()))used = true;
 		else                             used = false;
 
 		//文字の描画
 		std::stringstream ss;
-		cv::putText(screen,std::string("Frame")    ,cv::Point( 50, 49),cv::FONT_HERSHEY_SIMPLEX,0.5,cv::Scalar(255,255,255), 1, CV_AA);
-		cv::putText(screen,std::string("Paramators"),cv::Point(600, 50),cv::FONT_HERSHEY_SIMPLEX,0.5,cv::Scalar(255,255,255), 1, CV_AA);
-		cv::putText(screen,std::string("Index")   +ss.str(),cv::Point(610, 65),cv::FONT_HERSHEY_SIMPLEX,0.5,cv::Scalar(255,255,255), 1, CV_AA);
-		cv::putText(screen,std::string("SubIndex")+ss.str(),cv::Point(610, 80),cv::FONT_HERSHEY_SIMPLEX,0.5,cv::Scalar(255,255,255), 1, CV_AA);
-		cv::putText(screen,std::string("Move ")   +ss.str(),cv::Point(610, 95),cv::FONT_HERSHEY_SIMPLEX,0.5,cv::Scalar(255,255,255), 1, CV_AA);
-		cv::putText(screen,std::string("Angle")   +ss.str(),cv::Point(610, 110),cv::FONT_HERSHEY_SIMPLEX,0.5,cv::Scalar(255,255,255), 1, CV_AA);
-		cv::putText(screen,std::string("Reverse") +ss.str(),cv::Point(610, 125),cv::FONT_HERSHEY_SIMPLEX,0.5,cv::Scalar(255,255,255), 1, CV_AA);
+		cv::putText(screen,std::string("Frame")                ,cv::Point( 50,  49),cv::FONT_HERSHEY_SIMPLEX,0.5,cv::Scalar(255,255,255), 1, CV_AA);
+		cv::putText(screen,std::string("Paramators")           ,cv::Point(600,  50),cv::FONT_HERSHEY_SIMPLEX,0.5,cv::Scalar(255,255,255), 1, CV_AA);
+		cv::putText(screen,std::string("Index")       +ss.str(),cv::Point(610,  65),cv::FONT_HERSHEY_SIMPLEX,0.5,cv::Scalar(255,255,255), 1, CV_AA);
+		cv::putText(screen,std::string("SubIndex")    +ss.str(),cv::Point(610,  80),cv::FONT_HERSHEY_SIMPLEX,0.5,cv::Scalar(255,255,255), 1, CV_AA);
+		cv::putText(screen,std::string("Move ")       +ss.str(),cv::Point(610,  95),cv::FONT_HERSHEY_SIMPLEX,0.5,cv::Scalar(255,255,255), 1, CV_AA);
+		cv::putText(screen,std::string("Angle")       +ss.str(),cv::Point(610, 110),cv::FONT_HERSHEY_SIMPLEX,0.5,cv::Scalar(255,255,255), 1, CV_AA);
+		cv::putText(screen,std::string("Reverse")     +ss.str(),cv::Point(610, 125),cv::FONT_HERSHEY_SIMPLEX,0.5,cv::Scalar(255,255,255), 1, CV_AA);
+		cv::putText(screen,std::string("FillingRate") +ss.str(),cv::Point(610, 140),cv::FONT_HERSHEY_SIMPLEX,0.5,cv::Scalar(255,255,255), 1, CV_AA);
 		ss << std::setw(2) << current+1 << "/" << problem.pieces.size();
 		cv::putText(screen,std::string(":") + ss.str(),cv::Point(690, 65),cv::FONT_HERSHEY_SIMPLEX,0.5,cv::Scalar(255,255,255), 1, CV_AA);
 		for(int i=0;i<4;i++){
@@ -60,6 +70,9 @@ void InstantViewer::View(){
 		}else{
 			cv::putText(screen,"Unused",cv::Point(720, 102),cv::FONT_HERSHEY_SIMPLEX,0.5,cv::Scalar(255,255,255), 1, CV_AA);
 		}
+		ss.str("");
+		ss << fill_rate << "%";
+		cv::putText(screen,ss.str(),cv::Point(695, 140),cv::FONT_HERSHEY_SIMPLEX,0.5,cv::Scalar(255,255,255), 1, CV_AA);
 		cv::putText(screen,std::string("Original") ,cv::Point(600,200),cv::FONT_HERSHEY_SIMPLEX,0.5,cv::Scalar(255,255,255), 1, CV_AA);
 		cv::putText(screen,"Right or Left : change current index.   Esc:exit.  E:all_view  F:frame_view"    ,cv::Point( 50, 590),cv::FONT_HERSHEY_SIMPLEX,0.5,cv::Scalar(255,255,255), 1, CV_AA);
 
