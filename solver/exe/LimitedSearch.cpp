@@ -5,6 +5,7 @@
 #include <search/InstantViewer.h>
 #include <search/LengthHeuristic.h>
 #include <search/AreaHeuristic.h>
+#include <search/NarrowHeuristic.h>
 #include <search/WeightComposite.h>
 
 
@@ -17,7 +18,8 @@ int main(){
 
 	//評価関数登録
 	h->AddHeuristic(new AreaHeuristic()  ,1.0);
-	h->AddHeuristic(new LengthHeuristic(),0.7);
+	h->AddHeuristic(new LengthHeuristic(),0.0);
+	h->AddHeuristic(new NarrowHeuristic(),10.0);
 	bs.AddHeuristic(h);
 
 	//問題作成
