@@ -12,22 +12,21 @@
 
 int main(){
 
+    af::info();
 	std::cout << "---Graph Algorithm Test---" << std::endl;
 	
 
-	Problem problem = ProblemMaker::MakeTriangleProblem(Range<int>(1,1),10,200);
-	double area = 0;
-	for(int i=0;i<problem.pieces.size();i++){
-		area += problem.pieces[i].getArea();
-	}
-	std::cout << area << std::endl;
+	Problem problem = ProblemMaker::MakeTriangleProblem();
 
 	std::cout << "三角問題" << std::endl;
-	cv::Mat img = cv::Mat::zeros(600, 600, CV_8UC3);
 	for(Polygon p :problem.pieces){
+		cv::Mat img = cv::Mat::zeros(600, 600, CV_8UC3);
 
 		std::cout << p;
-		img << p /** cMat::MakeRotateMatrix(M_PI/4) */* cMat::MakeMoveMatrix(100,100);
+		img << p * /*cMat::MakeRotateMatrix(M_PI/4) **/ cMat::MakeMoveMatrix(100,200);
+		p.normalize();
+		std::cout << p;
+		img << p * /*cMat::MakeRotateMatrix(M_PI/4) **/ cMat::MakeMoveMatrix(200,100);
 
 		cv::namedWindow("drawing", CV_WINDOW_AUTOSIZE|CV_WINDOW_FREERATIO);
 		cv::imshow("drawing", img);

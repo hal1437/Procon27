@@ -31,19 +31,19 @@ std::vector<TransParam> BasicSearch::Listup(const Polygon& frame,int frame_index
 			}
 			//変換を記録
 			//角度一致(2種類)
-			Point v1 = pol   .getNode(LR(i         -1,pol   .size())) - pol   .getNode(i);
-			Point r1 = re_pol.getNode(LR(i         -1,re_pol.size())) - re_pol.getNode(i);
+			Point v1 = pol   .getNode(LR(i          -1,pol   .size())) - pol   .getNode(i);
+			Point v2 = pol   .getNode(LR(i          +1,pol   .size())) - pol   .getNode(i);
+			Point r1 = re_pol.getNode(LR(i          -1,re_pol.size())) - re_pol.getNode(i);
+			Point r2 = re_pol.getNode(LR(i          +1,re_pol.size())) - re_pol.getNode(i);
 			Point f1 = frame .getNode(LR(frame_index-1,frame .size())) - frame .getNode(frame_index);
-			Point v2 = pol   .getNode(LR(i         +1,pol   .size())) - pol   .getNode(i);
-			Point r2 = re_pol.getNode(LR(i         +1,re_pol.size())) - re_pol.getNode(i);
 			Point f2 = frame .getNode(LR(frame_index+1,frame .size())) - frame .getNode(frame_index);
-			answer.push_back(TransParam{i,frame.getNode(frame_index),false,Point::getAngle2Vec(v1,f1)});
-			answer.push_back(TransParam{i,frame.getNode(frame_index),true ,Point::getAngle2Vec(r1,f2)});
+			answer.push_back(TransParam{i,frame.getNode(frame_index),false,Point::getAngle2Vec(f1,v2)});
+			answer.push_back(TransParam{i,frame.getNode(frame_index),true ,Point::getAngle2Vec(f1,r1)});
 			
 			//角度不一致(追加2種類)
 			if(fitting==false){
-				answer.push_back(TransParam{i,frame.getNode(frame_index),false,Point::getAngle2Vec(v2,f2)});
-				answer.push_back(TransParam{i,frame.getNode(frame_index),true ,Point::getAngle2Vec(r2,f1)});
+				answer.push_back(TransParam{i,frame.getNode(frame_index),false,Point::getAngle2Vec(f2,v1)});
+				answer.push_back(TransParam{i,frame.getNode(frame_index),true ,Point::getAngle2Vec(f2,r2)});
 			}
 		}
 	}
@@ -91,7 +91,8 @@ std::vector<TransParam> BasicSearch::Listup(const Polygon& frame,int frame_index
 		}
 // 		std::cout << trans << std::endl;
 // 		std::cout << (is_over? "('A`)":"（　＾ω＾）") << std::endl;
-		//フレームを描画
+// // 		フレームを描画
+// 		cv::Mat screen = cv::Mat::zeros(600, 900, CV_8UC3);
 // 		Point frame_offset(50,50);
 // 		for(int i=0;i<frame.size();i++){
 // 			Point p1 = frame.getNode(i)+frame_offset;
@@ -100,12 +101,12 @@ std::vector<TransParam> BasicSearch::Listup(const Polygon& frame,int frame_index
 // 		}
 // 		//現在のピースを描画
 // 		screen << trans * cMat::MakeMoveMatrix(50,50);
-
-		//表示
+//
+// // 		表示
 // 		cv::namedWindow("InstantViewer", CV_WINDOW_AUTOSIZE|CV_WINDOW_FREERATIO);
 // 		cv::imshow("InstantViewer", screen);
 // 		cv::waitKey(0);
-
+//
 
 		//消えてもらおう
 		if(is_over == true){
@@ -137,32 +138,32 @@ Polygon BasicSearch::Merge(const Polygon& frame, const Polygon& poly){
 
 					
 					//フィッティング
-					if(std::abs(M_PI - Point::getAngle2Vec(v1,f1)) > M_PI - SAME_ANGLE_EPS &&
-					std::abs(M_PI - Point::getAngle2Vec(v2,f2)) > M_PI - SAME_ANGLE_EPS){
+					if(std::abs(M_PI - Point::getAngle2Vec(f1,v1)) > M_PI - SAME_ANGLE_EPS &&
+					   std::abs(M_PI - Point::getAngle2Vec(f2,v2)) > M_PI - SAME_ANGLE_EPS){
 						reverse_insert = false;
 						fitting = true;
 // 						std::cout << "fit1" << std::endl;
 					}else
-					if(std::abs(M_PI - Point::getAngle2Vec(v1,f2)) > M_PI - SAME_ANGLE_EPS &&
-					std::abs(M_PI - Point::getAngle2Vec(v2,f1)) > M_PI - SAME_ANGLE_EPS){
+					if(std::abs(M_PI - Point::getAngle2Vec(f1,v2)) > M_PI - SAME_ANGLE_EPS &&
+					   std::abs(M_PI - Point::getAngle2Vec(f2,v1)) > M_PI - SAME_ANGLE_EPS){
 						reverse_insert = true;
 						fitting = true;
 // 						std::cout << "fit2" << std::endl;
 					}
-					else if(std::abs(M_PI - Point::getAngle2Vec(v1,f1)) > M_PI - SAME_ANGLE_EPS)reverse_insert = false,back_index = false;//,std::cout << "Merge1" << std::endl;
-					else if(std::abs(M_PI - Point::getAngle2Vec(v1,f2)) > M_PI - SAME_ANGLE_EPS)reverse_insert = true ,back_index = true ;//,std::cout << "Merge2" << std::endl;
-					else if(std::abs(M_PI - Point::getAngle2Vec(v2,f1)) > M_PI - SAME_ANGLE_EPS)reverse_insert = true ,back_index = false;//,std::cout << "Merge3" << std::endl;
-					else if(std::abs(M_PI - Point::getAngle2Vec(v2,f2)) > M_PI - SAME_ANGLE_EPS)reverse_insert = false,back_index = true ;//,std::cout << "Merge4" << std::endl;
+					else if(std::abs(M_PI - Point::getAngle2Vec(f1,v1)) > M_PI - SAME_ANGLE_EPS)reverse_insert = false,back_index = false;//,std::cout << "Merge1" << std::endl;
+					else if(std::abs(M_PI - Point::getAngle2Vec(f1,v2)) > M_PI - SAME_ANGLE_EPS)reverse_insert = true ,back_index = false;//,std::cout << "Merge2" << std::endl;
+					else if(std::abs(M_PI - Point::getAngle2Vec(f2,v1)) > M_PI - SAME_ANGLE_EPS)reverse_insert = true ,back_index = true ;//,std::cout << "Merge3" << std::endl;
+					else if(std::abs(M_PI - Point::getAngle2Vec(f2,v2)) > M_PI - SAME_ANGLE_EPS)reverse_insert = false,back_index = true ;//,std::cout << "Merge4" << std::endl;
 					else{
 						std::cout << "== NO MATCHING EXCEPTION ==" << std::endl;
 						std::cout << "v1:" << v1 << std::endl;
 						std::cout << "v2:" << v2 << std::endl;
 						std::cout << "f1:" << f1 << std::endl;
 						std::cout << "f2:" << f2 << std::endl;
-						std::cout << "v1,f1:" << Point::getAngle2Vec(v1,f1) << std::endl;
-						std::cout << "v2,f1:" << Point::getAngle2Vec(v2,f1) << std::endl;
-						std::cout << "v1,f2:" << Point::getAngle2Vec(v1,f2) << std::endl;
-						std::cout << "v2,f2:" << Point::getAngle2Vec(v2,f2) << std::endl;
+						std::cout << "v1,f1:" << Point::getAngle2Vec(f1,v1) << std::endl;
+						std::cout << "v2,f1:" << Point::getAngle2Vec(f2,v1) << std::endl;
+						std::cout << "v1,f2:" << Point::getAngle2Vec(f1,v2) << std::endl;
+						std::cout << "v2,f2:" << Point::getAngle2Vec(f2,v2) << std::endl;
 						std::cout << "===========================" << std::endl;
 						return answer;
 					}

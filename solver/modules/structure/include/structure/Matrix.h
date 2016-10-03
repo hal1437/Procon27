@@ -3,7 +3,9 @@
 #include <structure/Point.hpp>
 #include <structure/Polygon.h>
 #include <util/Printable.h>
+#include <arrayfire.h>
 #include <cmath>
+
 
 //数学的行列
 template<size_t W,size_t H = W>
@@ -11,13 +13,21 @@ class Matrix:public Printable{
 public:
 	typedef Matrix<W,H> current;   //通常
 	typedef Matrix<H,W> transpose; //転置
-
+	typedef double       Value;
+	
 public:
-	double _v[W][H]; //成分
+#ifdef USE_ArrayFire
+	af::array _m;//行列
+#else
+	Value _v[W][H]; //成分
+#endif
 
 public:
 
 	Matrix();//コンストラクタ
+#ifdef USE_ArrayFire
+	Matrix(af::array arg);//コンストラクタ
+#endif
 
 	static Matrix<3,1> ConvertMatrix(const Point& p);        //ベクトルを行列に変換
 	static Matrix<3,3> MakeMoveMatrix(double x,double y);    //平行移動行列作成
@@ -26,13 +36,15 @@ public:
 	static current MakeIdentityMatrix();//単位行列生成
 	static constexpr bool isSquare(); //正方行列の判定
 
-	double    getDeterminant()const; //行列式取得
+	Value    getDeterminant()const; //行列式取得
 	transpose getTranspose()const;   //転置行列取得
 	Point pos()const;
 
+	Value getElement(size_t w,size_t h)const;
+	void setElement (size_t w,size_t h,Value v);
+
 	//演算子定義
-	double  operator()(size_t w,size_t h)const;//抽出
-	double& operator()(size_t w,size_t h);//抽出
+	Value  operator()(size_t w,size_t h)const;//抽出
 	//単項演算
 	current operator+()const; //正の単項演算
 	current operator-()const; //負の単項演算

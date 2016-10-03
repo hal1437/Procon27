@@ -102,8 +102,8 @@ _Point<Type> _Point<Type>::getNorm()const{
 }
 template <class Type>
 bool _Point<Type>::Rotate(double angle){
-	Type x_n =  std::cos(angle) * this->x + std::sin(angle) * this->y;
-	Type y_n = -std::sin(angle) * this->x + std::cos(angle) * this->y;
+	Type x_n =  std::cos(angle) * this->x - std::sin(angle) * this->y;
+	Type y_n =  std::sin(angle) * this->x + std::cos(angle) * this->y;
 	this->x = x_n;
 	this->y = y_n;
 	return true;
@@ -138,26 +138,12 @@ void _Point<Type>::Print(std::ostream& ost)const{
 template <class Type>
 double _Point<Type>::getAngle2Vec(const _Point<Type>& v1,const _Point<Type>& v2){
 	if(v1==_Point<Type>() || v2==_Point<Type>())return 0;
-
-	//鈍角かどうか
-	bool isObtuse;
-	double base_angle = std::acos(v1.x/v1.size());
-	if(v1.y < 0) base_angle = -base_angle;
-	if(v1.x == 0 && v1.y > 0)base_angle =  M_PI/2;
-	if(v1.x == 0 && v1.y < 0)base_angle = -M_PI/2;
-	Point v2_d = v2.getRotate(base_angle);
-
-	if(v2_d.y < 0)isObtuse=true;
-
-	//角度計算
-	double angle;
-	angle = std::acos((v1.x*v2.x+v1.y*v2.y)/(v1.size()*v2.size()));
-	if((v1.x*v2.x+v1.y*v2.y)/(v1.size()*v2.size())>1)angle = 0;
-
-	
-	if(isObtuse){
-		return 2*M_PI-angle;
-	
-	}else        return angle;
+	//極座標変換
+	double delta = 0;
+	double sita1 = (v1.y>0 ? std::acos(v1.x/v1.size()) : -std::acos(v1.x/v1.size())); //(-PI < θ_1 < PI)
+	double sita2 = (v2.y>0 ? std::acos(v2.x/v2.size()) : -std::acos(v2.x/v2.size())); //(-PI < θ_2 < PI)
+	if(sita1 > sita2)delta = sita1 - sita2;
+	if(sita1 < sita2)delta = sita1 - sita2 + 2*M_PI;
+	return delta;
 }
 

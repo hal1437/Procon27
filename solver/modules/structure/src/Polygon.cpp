@@ -26,7 +26,7 @@ bool Polygon::normalize(){
 	}
 
 	//回転変換
-	double angle = Point::getAngle2Vec(Point(-1,0),this->getNode(1));
+	double angle = Point::getAngle2Vec(Point(1,0),this->getNode(1));
 	for(int i=0;i<this->size();i++){
 		this->setNode(i,this->getNode(i).getRotate(angle));
 	}
@@ -85,8 +85,9 @@ double Polygon::getArea()const{
 		int i_ = (i+1) % this->size();
 		score += (this->getNode(i).x - this->getNode(i_).x) * 
 		         (this->getNode(i).y + this->getNode(i_).y);
+
 	}
-	return score/2.0;
+	return std::abs(score/2.0);
 }
 //角度算出
 double Polygon::getAngle(int index)const{
@@ -97,7 +98,7 @@ double Polygon::getAngle(int index)const{
 	}else{
 		Point v1 = this->getNode((index + this->size() + 1)%this->size()) - this->getNode(index);
 		Point v2 = this->getNode((index + this->size() - 1)%this->size()) - this->getNode(index);
-		return Point::getAngle2Vec(v1,v2);
+		return Point::getAngle2Vec(v2,v1);
 	}
 }
 
@@ -106,7 +107,9 @@ double Polygon::getAngle(int index)const{
 bool Polygon::ConfirmNumbers(){
 	double sum=0;
 	for(int i=0;i<this->size();i++){
-		sum += this->getAngle(i);
+		int i_1 = (i+1) % this->size();
+		int i_2 = (i+this->size()-1) % this->size();
+		sum += Point::getAngle2Vec(this->getNode(i_1)-this->getNode(i),this->getNode(i_2)-this->getNode(i));
 	}
 	//多角形の角の総和が(n+2)*PIに等しくければ
 	if(NE(sum , (this->size()+2) * M_PI)){
@@ -131,14 +134,11 @@ bool Polygon::isComprehension(const Point& p)const{
 		double angle = Point::getAngle2Vec(v[i]-p,v[(i+1)%this->size()]-p);
 		if(angle > M_PI)angle = angle - 2*M_PI;
 		sum += angle;
-// 		std::cout << angle*180/M_PI << "[deg]" << std::endl;
 	}
-// 	std::cout << sum*180/M_PI << "[deg]" << std::endl;
 	return (std::abs(sum*180/M_PI-360) < 0.01f);
 }
 
 
-//頂点追加
 size_t Polygon::size()const{
 	return this->v.size();
 }
@@ -169,7 +169,6 @@ bool Polygon::setNode(int index,const Point& pos){
 		std::cout << "[Polygon.cpp] index = \"" << index << "\" overran in Polygon::setNode" << std::endl;
 		return false;
 	}else{
-
 		//四捨五入
 		this->v[index] = PointRound(pos);
 		return true;

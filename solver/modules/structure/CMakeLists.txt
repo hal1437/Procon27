@@ -15,5 +15,10 @@ if(OpenCV_FOUND)
   target_link_libraries(structure ${OpenCV_LIBS})
 endif()
 
+# ArrayFireが発見できればArrayFireもリンク
+if(ArrayFire_FOUND)
+  target_link_libraries(structure ${ArrayFire_LIBRARIES})
+endif()
+
 
 
