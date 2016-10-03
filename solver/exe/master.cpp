@@ -165,11 +165,16 @@ int main(int argc,char* argv[]){
 
 			//フレームを検索
 			if(ans == "y" || ans == "Y"){
-				auto frame = std::max_element(problem.pieces.begin(),problem.pieces.end(),[](const Polygon& lhs,const Polygon& rhs){
+				auto first = std::max_element(problem.pieces.begin(),problem.pieces.end(),[](const Polygon& lhs,const Polygon& rhs){
 					return (lhs.getArea() < rhs.getArea());
 				});
-				problem.frame = *frame;
-				problem.pieces.erase(frame);
+				problem.pieces.erase(first);
+				auto second = std::max_element(problem.pieces.begin(),problem.pieces.end(),[](const Polygon& lhs,const Polygon& rhs){
+					return (lhs.getArea() < rhs.getArea());
+				});
+				problem.frame = *second;
+				problem.pieces.erase(second);
+
 			}
 
 			//探索開始
@@ -271,8 +276,10 @@ void Search(Problem prob){
 	bs.AddHeuristic(h);
 
 	//正規化
+	prob.frame.ConfirmNumbers();
 	prob.frame.normalize();
 	for(int i=0;i<prob.pieces.size();i++){
+		prob.frame.ConfirmNumbers();
 		prob.pieces[i].normalize();
 	}
 
