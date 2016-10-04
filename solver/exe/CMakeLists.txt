@@ -53,3 +53,12 @@ if(TBB_FOUND)
 endif()
 message(STATUS "  limited")
 
+add_executable(suspend SuspendSearch.cpp)
+target_link_libraries(suspend structure)
+target_link_libraries(suspend search)
+target_link_libraries(suspend ${OpenCV_LIBS})
+if(TBB_FOUND)
+  target_link_libraries(suspend ${TBB_LIBRARIES})
+endif()
+message(STATUS "  suspend")
+
