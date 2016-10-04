@@ -25,6 +25,7 @@ LimitedSearch::Answer LimitedSearch::Search(const Problem& prob){
 		Polygon frame; //状態
 		int h_val;     //評価値
 		std::vector<std::pair<TransParam,int>> hands; //履歴
+		std::vector<int> research;//再探索ノード
 
 		inline int step(){return this->hands.size();}//使用手数
 	};
@@ -35,8 +36,12 @@ LimitedSearch::Answer LimitedSearch::Search(const Problem& prob){
 	std::deque<Node> queue;//探索キュー
 
 	int index = 0;
+	std::vector<int> seqence;
+	for(int i=0;i<prob.frame.size();i++){
+		seqence.push_back(i);
+	}
 	//初期状態追加
-	queue.push_back(Node{prob.frame,std::numeric_limits<int>::max(),std::vector<std::pair<TransParam,int>>()});
+	queue.push_back(Node{prob.frame,std::numeric_limits<int>::max(),std::vector<std::pair<TransParam,int>>(),seqence});
 
 	//ステップが最後になるまで
 	while(index < prob.pieces.size()){
@@ -57,10 +62,10 @@ LimitedSearch::Answer LimitedSearch::Search(const Problem& prob){
 						return (v.second == i);
 					})!=node.hands.end())continue;
 
-					for(int j=0;j<node.frame.size();j++){ //配置位置
+					for(int j=0;j<node.research.size();j++){ //配置位置
 
 						//リストアップ実施
-						std::vector<TransParam> list = Listup(node.frame,j,prob.pieces[i]);
+						std::vector<TransParam> list = Listup(node.frame,node.research[j],prob.pieces[i]);
 						//「置かない」を追加
 						TransParam empty;
 						empty.sub_index=-1;
@@ -74,12 +79,30 @@ LimitedSearch::Answer LimitedSearch::Search(const Problem& prob){
 								n.frame = Merge(node.frame,Transform(prob.pieces[i],list[k]));
 								n.h_val = GetHeuristic(n.frame);
 								n.hands = node.hands;
+								//再調査ノード決定
+								int s;
+								for(s=0;s<node.frame.size();s++){
+									//変更箇所が見られたら
+									if(!(n.frame.getNode(s) == node.frame.getNode(s))){
+										break;
+									}
+								}
+								//そこから追加した頂点数くらいは探索するか
+								std::vector<int> res;
+								for(int e=0;e<prob.pieces[i].size();e++){
+									if(s+e-1 >= 0){
+										res.push_back(s+e-1);
+									}
+								}
+								n.research = res;
 								n.hands.push_back(std::make_pair(list[k],i));
+
 							}else{
 								//パス
 								n.h_val = node.h_val;
 								n.hands = node.hands;
 								n.frame = node.frame;
+								n.research = node.research;
 							}
 							queue.push_back(n);
 						}
