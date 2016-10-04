@@ -62,3 +62,9 @@ if(TBB_FOUND)
 endif()
 message(STATUS "  suspend")
 
+add_executable(logical logical.cpp)
+target_link_libraries(logical structure)
+target_link_libraries(logical search)
+target_link_libraries(logical ${OpenCV_LIBS})
+message(STATUS "  logical")
+

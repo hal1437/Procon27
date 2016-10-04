@@ -17,7 +17,6 @@ bool InstantViewer::Solve(){
 }
 //再生開始
 void InstantViewer::View(){
-	
 
 	int current=0;
 	bool used;
