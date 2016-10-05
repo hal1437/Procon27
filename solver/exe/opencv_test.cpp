@@ -30,6 +30,7 @@ int main(){
 		pixcel = GetPixcel(img, 100, 100);
 		
 		std::cout << (int)pixcel[0] << ", " << (int)pixcel[1] << ", " << (int)pixcel[2] << std::endl;
+		std::cout << ColorDistance(GetPixcel(img, 10, 10), GetPixcel(img, 700, 700)) << std::endl;
 
 
 		cv::namedWindow("drawing", CV_WINDOW_AUTOSIZE|CV_WINDOW_FREERATIO);
