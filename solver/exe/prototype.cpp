@@ -75,6 +75,7 @@ int main(){
  		if(device != -1 && !pause)cap >> origin;
 		resize(origin,frame,cv::Point(), 1.0, 1.0);
 
+
         //グレースケール
 		cvtColor(frame, gray, CV_BGR2GRAY);
 		//二値化

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
 #include <util/Console.h>
+#include <capture/MatIO.h>
 #include <string>
 
 
@@ -59,7 +60,7 @@ int main(){
 				 "                                                  \n"
 				 "==================================================\n";
 
-	cv::Mat origin,frame,gray,thre,tmp;
+	cv::Mat origin,frame,gray,thre,tmp,d_filter;
 	bool nutoral = true;
 	origin = cv::imread (image_file);
 	while(1)//無限ループ
@@ -85,13 +86,23 @@ int main(){
 			frame = tmp;
 		}
 
-
+		
+		cv::Mat d_filter = frame.clone();
+		for(int i=0; i < d_filter.cols; i++){
+			for(int j=0; j < d_filter.rows; j++){
+				if(ColorDistance(GetPixcel(frame, 100,100), GetPixcel(frame, j,i)) < 30){
+					SetPixcel(d_filter, j,i, 0, 0, 0);
+				}
+			}
+		}
+		cv::imshow("d_filter", d_filter);//画像を表示．
 		//二値化
 		if(mode == 1){
 			cvtColor(frame , gray , CV_BGR2GRAY);
 			cv::threshold(gray, thre, value, 255, cv::THRESH_BINARY);
 			cv::imshow("Thereshold",thre);
 			cv::destroyWindow("Gray Scale");
+		
 		}else if(mode == 2){
 			cvtColor(frame , gray , CV_BGR2GRAY);
 			cv::imshow("Gray Scale",gray);
@@ -181,6 +192,6 @@ int main(){
 
 
 bool CheckHitKey(int key,char c){
-	//return key == (c-'a' + 97);
-	return key == (c-'a' + 1048673);
+	return key == (c-'a' + 97);
+	//return key == (c-'a' + 1048673);
 }
