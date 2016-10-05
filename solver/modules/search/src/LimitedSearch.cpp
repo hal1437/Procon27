@@ -25,6 +25,7 @@ LimitedSearch::Answer LimitedSearch::Search(const Problem& prob){
 		Polygon frame; //状態
 		int h_val;     //評価値
 		std::vector<std::pair<TransParam,int>> hands; //履歴
+		std::vector<Point> dead;
 
 		inline int step(){return this->hands.size();}//使用手数
 	};
@@ -32,11 +33,12 @@ LimitedSearch::Answer LimitedSearch::Search(const Problem& prob){
 	LimitedSearch::Answer answer; //回答
 	std::random_device rd;        //乱数生成器
 	std::deque<Node> queue;       //探索キュー
-	std::vector<Point> dead;      //探索省略点
+// 	std::vector<Point> dead;      //探索省略点
 
 	int index = 0;
 	int best_val = std::numeric_limits<int>::max();
 	int old_val  = std::numeric_limits<int>::max();
+	Node best_node;
 	//初期状態追加
 	queue.push_back(Node{prob.frame,old_val,std::vector<std::pair<TransParam,int>>()});
 
@@ -50,7 +52,9 @@ LimitedSearch::Answer LimitedSearch::Search(const Problem& prob){
 		for(int d = 0;d < DEPTH_LIMIT && index < prob.pieces.size();d++){
 			int queue_size = queue.size();//キューのサイズ
 			for(int q=0;q<queue_size;q++){
+				int queue_tail = queue.size();//キュー末端位置
 				Node node = queue.front(); //先頭取り出し
+				
 				queue.pop_front();         //先頭を削除
 
 				//フレームの頂点について
@@ -58,8 +62,7 @@ LimitedSearch::Answer LimitedSearch::Search(const Problem& prob){
 					bool alive = false;//頂点の生存フラグ
 
 					//頂点が無視リストに追加されていれば
-					if(std::find(dead.begin(),dead.end(),node.frame.getNode(j)) != dead.end())continue;//以降探索しない
-
+					if(std::find(node.dead.begin(),node.dead.end(),node.frame.getNode(j)) != node.dead.end())continue;//以降探索しない
 
 					//全ピースについて
 					for(int i = 0;i < prob.pieces.size();i++){ //ピース
@@ -71,13 +74,11 @@ LimitedSearch::Answer LimitedSearch::Search(const Problem& prob){
 						std::vector<TransParam> list;
 
 						//配置位置が無視リストに追加されていなければ
-						{
-							//リストアップ実施
-							list = Listup(node.frame,j,prob.pieces[i]);
+						//リストアップ実施
+						list = Listup(node.frame,j,prob.pieces[i]);
 
-							//頂点にが1つ配置可能ならばでもしていれば、次も探索を行う
-							if(list.size() > 0)alive=true;
-						}
+						//頂点にが1つ配置可能ならばでもしていれば、次も探索を行う
+						if(list.size() > 0)alive=true;
 
 
 						//「置かない」を追加
@@ -106,7 +107,15 @@ LimitedSearch::Answer LimitedSearch::Search(const Problem& prob){
 						//頂点に何も追加されていない
 						if(alive==false){
 							//以降その頂点は探索を行わない
-							dead.push_back(node.frame.getNode(j));
+							node.dead.push_back(node.frame.getNode(j));
+
+							//キューに追加したものも変更する
+							if(queue.size() > queue_tail){
+								for(int qq = queue.size();qq<queue_tail;qq++){
+									queue[qq].dead.push_back(node.frame.getNode(j));
+								}
+							}
+							break;
 						}
 					}
 				}
@@ -127,23 +136,22 @@ LimitedSearch::Answer LimitedSearch::Search(const Problem& prob){
 		if(queue.size() > WIDTH_LIMIT){
 			queue.erase(std::next(queue.begin() , WIDTH_LIMIT),queue.end());
 		}
+		//最高記録を保存
+		if(queue.size() > 0){
+			best_node = queue[0];
+		}
 		std::cout << "steped:" << queue.size() << " index:" << index << std::endl;
 
 	}while(old_val!=best_val);
 
-	std::cout << "finished" << std::endl;
-	if(queue.size()==0){
-		while(1);
-	}
-	for(auto aa : queue.front().hands){
-		std::cout << aa.second << std::endl;
-	}
-	std::cout << "next" << std::endl;
+	std::cout << "finish" << std::endl;
+
+	//回答に変換
 	for(int i=0;i<prob.pieces.size();i++){
-		auto it = std::find_if(queue.front().hands.begin(),queue.front().hands.end(),[&](std::pair<TransParam,int>& v){
+		auto it = std::find_if(best_node.hands.begin(),best_node.hands.end(),[&](std::pair<TransParam,int>& v){
 			return (v.second == i);
 		});
-		if(it != queue.front().hands.end()){
+		if(it != best_node.hands.end()){
 			answer.push_back(it->first);
 		}else{
 			answer.push_back(TransParam());
