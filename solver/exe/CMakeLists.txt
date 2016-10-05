@@ -13,6 +13,7 @@ message(STATUS "  graph")
 
 add_executable(opencv_test opencv_test.cpp)
 target_link_libraries(opencv_test structure)
+target_link_libraries(opencv_test capture)
 target_link_libraries(opencv_test ${OpenCV_LIBS})
 message(STATUS "  opencv_test")
 
