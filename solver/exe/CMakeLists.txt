@@ -66,3 +66,18 @@ target_link_libraries(master structure)
 target_link_libraries(master search)
 message(STATUS "  master")
 
+add_executable(suspend SuspendSearch.cpp)
+target_link_libraries(suspend structure)
+target_link_libraries(suspend search)
+target_link_libraries(suspend ${OpenCV_LIBS})
+if(TBB_FOUND)
+  target_link_libraries(suspend ${TBB_LIBRARIES})
+endif()
+message(STATUS "  suspend")
+
+add_executable(logical logical.cpp)
+target_link_libraries(logical structure)
+target_link_libraries(logical search)
+target_link_libraries(logical ${OpenCV_LIBS})
+message(STATUS "  logical")
+

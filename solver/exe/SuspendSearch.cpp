@@ -1,7 +1,7 @@
 
 #include <iostream>
 #include <structure/ProblemMaker.h>
-#include <search/LimitedSearch.h>
+#include <search/SuspendSearch.h>
 #include <search/InstantViewer.h>
 #include <search/LengthHeuristic.h>
 #include <search/AreaHeuristic.h>
@@ -11,7 +11,7 @@
 
 int main(){
 	
-	LimitedSearch bs;
+	SuspendSearch bs;
 	InstantViewer viewer;
 	WeightComposite* h = new WeightComposite();
 	

@@ -8,12 +8,12 @@
 #include <search/BasicSearch.h>
 #include <search/Heuristic.hpp>
 
-//リミテッドサーチ
-class LimitedSearch:public BasicSearch{
+//サスペンド
+class SuspendSearch:public BasicSearch{
 private:
-	
-	const int WIDTH_LIMIT = 5;//探索幅
-	const int DEPTH_LIMIT = 1;//探索深さ
+	//だいたいリミテッドのパクリ
+	const int WIDTH_LIMIT = 1;//探索幅
+	const int RECORD_LIMIT = 1000;
 
 	std::vector<Heuristic<Polygon>*> heuristic;
 
@@ -29,6 +29,5 @@ public:
 	virtual Answer Search(const Problem& prob);
 
 };
-
 
 
