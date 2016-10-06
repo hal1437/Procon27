@@ -20,6 +20,9 @@ int main(){
 	std::cin >> device;
 	std::string image_file;
 	cv::VideoCapture cap;
+	cv::Point center_pos(0, 0);
+	cv::namedWindow("window", CV_WINDOW_AUTOSIZE);
+	cv::setMouseCallback("window", my_mouse_callback, (void*)&center_pos);
 
 	//カメラデバイスが正常にオープンしたか確認．
 	if(device == -1){
@@ -37,7 +40,8 @@ int main(){
 	int mode = 0;
 	int flip = 0;
 	int value = 100;
-	
+	int limit_range = 50;
+
 	Console::ClearScreen(0);
 	Console::SetCursorPos(0,0);
 	std::cout << "==================================================\n"
@@ -60,7 +64,7 @@ int main(){
 				 "                                                  \n"
 				 "==================================================\n";
 
-	cv::Mat origin,frame,gray,thre,tmp,d_filter;
+	cv::Mat origin,frame,gray,thre,tmp;
 	bool nutoral = true;
 	origin = cv::imread (image_file);
 	while(1)//無限ループ
@@ -87,15 +91,20 @@ int main(){
 		}
 
 		
-		cv::Mat d_filter = frame.clone();
+		cv::Mat d_filter(frame.rows, frame.cols, CV_8UC1);
+		//cv::Mat d_filter = frame.clone();
 		for(int i=0; i < d_filter.cols; i++){
 			for(int j=0; j < d_filter.rows; j++){
-				if(ColorDistance(GetPixcel(frame, 100,100), GetPixcel(frame, j,i)) < 30){
-					SetPixcel(d_filter, j,i, 0, 0, 0);
+				if(ColorDistance(GetPixcel(frame, center_pos.y, center_pos.x), GetPixcel(frame, j,i)) < 50){
+					d_filter.at<unsigned char>(j, i) = 255;
+					//SetPixcel(d_filter, j, i, 0, 0, 0);
+				}else{
+					d_filter.at<unsigned char>(j, i) = 0;					
 				}
 			}
 		}
 		cv::imshow("d_filter", d_filter);//画像を表示．
+
 		//二値化
 		if(mode == 1){
 			cvtColor(frame , gray , CV_BGR2GRAY);
@@ -180,6 +189,8 @@ int main(){
 		Console::SetCursorPos(27,10);
 		if(flip&FLIP_UD)std::cout << "on  ";
 		else std::cout << "off ";
+		Console::SetCursorPos(0,13);
+		std::cout << center_pos.x << "," << center_pos.y << std::flush;
 		Console::SetCursorPos(0,21);
 
 		std::cout << std::flush;

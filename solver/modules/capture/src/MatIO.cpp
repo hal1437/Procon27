@@ -14,3 +14,15 @@ void SetPixcel(cv::Mat img,int x, int y, int r, int g, int b){
 double ColorDistance(cv::Vec3b p1, cv::Vec3b p2){
 	return sqrt(pow(p2[0]-p1[0], 2) + pow(p2[1]-p1[1], 2) + pow(p2[2]-p1[2], 2));
 }
+
+void my_mouse_callback(int event, int x, int y, int flags, void* param){
+   cv::Point *point = static_cast<cv::Point*>(param);
+
+   if(event == cv::EVENT_LBUTTONDOWN){
+   		point->x=x;
+		point->y=y;
+   	}
+        
+     
+    
+}
