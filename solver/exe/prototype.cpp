@@ -52,7 +52,7 @@ int main(){
 				 "=  q:exit               [:value1 up              =\n"
 				 "=  s:save               ]:value1 down            =\n"
 				 "=  t:threshold          @:value2 up              =\n"
-				 "=  p:pause              ::value2 down            =\n"
+				 "=                       ::value2 down            =\n"
 				 "=                       p:limit_range up         =\n"
 				 "=                       ;:limit_range down       =\n"
 				 "==================================================\n"
@@ -85,42 +85,47 @@ int main(){
 		resize(origin,frame,cv::Point(), 1.0, 1.0);
 
 
-        //グレースケール
-		cvtColor(frame, gray, CV_BGR2GRAY);
-		//二値化
+        
+        //輪郭の座標リスト
+		std::vector<std::vector<cv::Point>> contours;
+
 		if (mode == 0) {
+			//グレースケール
+			cvtColor(frame, gray, CV_BGR2GRAY);
+			//二値化
 			cv::threshold(gray, thre1, value1, 255, cv::THRESH_BINARY);
 			cv::threshold(gray, thre2, value2, 255, cv::THRESH_BINARY);
+			cv::bitwise_xor(thre1,thre2,thre0);
+			//表示
+			cv::imshow("thre1",thre1);
+			cv::imshow("thre2",thre2);
+			cv::imshow("thre0",thre0);
+			cv::destroyWindow("d_filter");
+			//輪郭の取得
+			cv::findContours(thre0, contours, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
 		}
 		else if (mode == 1) {
-			cv::threshold(gray, thre1, value1, 255, cv::THRESH_BINARY_INV);
-			cv::threshold(gray, thre2, value2, 255, cv::THRESH_BINARY_INV);
-		}
-
-		cv::bitwise_xor(thre1,thre2,thre0);
-
-		//表示
-		cv::imshow("thre1",thre1);
-		cv::imshow("thre2",thre2);
-		cv::imshow("thre0",thre0);
-
-		//色域でフィルターをかける
-		cv::Mat d_filter(frame.rows, frame.cols, CV_8UC1);
-		for(int i=0; i < d_filter.cols; i++){
-			for(int j=0; j < d_filter.rows; j++){
-				if(ColorDistance(GetPixcel(frame, center_pos[0].y, center_pos[0].x), GetPixcel(frame, j,i)) < limit_range){
-					d_filter.at<unsigned char>(j, i) = 255;
-				}else{
-					d_filter.at<unsigned char>(j, i) = 0;					
+			//色域でフィルターをかける
+			cv::Mat d_filter(frame.rows, frame.cols, CV_8UC1);
+			for(int i=0; i < d_filter.cols; i++){
+				for(int j=0; j < d_filter.rows; j++){
+					if(ColorDistance(GetPixcel(frame, center_pos[0].y, center_pos[0].x), GetPixcel(frame, j,i)) < limit_range){
+						d_filter.at<unsigned char>(j, i) = 255;
+					}else{
+						d_filter.at<unsigned char>(j, i) = 0;					
+					}
 				}
 			}
+			//表示
+			cv::imshow("d_filter", d_filter);
+			cv::destroyWindow("thre1");
+			cv::destroyWindow("thre2");
+			cv::destroyWindow("thre0");
+			//輪郭の取得
+			cv::findContours(d_filter, contours, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
 		}
-		cv::imshow("d_filter", d_filter);//画像を表示．
 
-		//輪郭の座標リスト
-		std::vector<std::vector<cv::Point>> contours;
-		//輪郭の取得
-		cv::findContours(thre0, contours, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
+
 		//検出された輪郭線を緑で描画
 		//cv::drawContours(frame, contours, -1, cv::Scalar(0, 255, 0));
 
@@ -256,7 +261,7 @@ int main(){
 		Console::SetCursorPos(10,14);
 		std::cout << key << "      ";
 		Console::SetCursorPos(10, 15);
-		std::cout << problem.pieces.size() <<"   ";
+		std::cout << approxes.size() <<"   ";
 		Console::SetCursorPos(37,11);
 		std::cout << limit_range << "   ";
 		Console::SetCursorPos(0,25);
