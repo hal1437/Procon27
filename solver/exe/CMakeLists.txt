@@ -67,6 +67,7 @@ target_link_libraries(master ${OpenCV_LIBS})
 target_link_libraries(master util)
 target_link_libraries(master structure)
 target_link_libraries(master search)
+target_link_libraries(master capture)
 message(STATUS "  master")
 
 add_executable(suspend SuspendSearch.cpp)
