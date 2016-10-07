@@ -1,19 +1,23 @@
 #include <CaptureIO.h>
 
-CaptureIO::CaptureIO(){
+void CaptureIO::Setup(){
 	for(int i = 0; i < 3; i++){
 		center_pos[i] = cv::Point(0,0);
 	}
 
+	seacher = [](Problem){return;};
+	deproymenter = [](Problem, int){return;};
+
 	cv::namedWindow("window", CV_WINDOW_AUTOSIZE);
 }
 CaptureIO::CaptureIO(int device){
-	CaptureIO();
+	Setup();
 	this->device = device;
 	this->resource_mode = false;
+	
 }
 CaptureIO::CaptureIO(std::string resource){
-	CaptureIO();
+	Setup();
 	this->resource = resource;
 	this->resource_mode = true;
 }
@@ -214,7 +218,8 @@ void CaptureIO::Run(){
 		else if(CheckHitKey(key,'s')){
 
 			Problem problem = toProbrem(contours);
-
+			seacher(problem);
+/*
 			//ピースの頂点情報の出力.
 			std::ofstream ofs("polygon_out.txt");
 			for(int i=0;i<problem.pieces.size();i++){
@@ -236,8 +241,7 @@ void CaptureIO::Run(){
 			}else{
 				std::cout << "上書きは勘弁して" << std::endl;
 			}
-
-			key = -1;
+*/
 		}else if (CheckHitKey(key,'m')){
 			//二値化
 			mode++;
@@ -262,6 +266,12 @@ void CaptureIO::Run(){
 			accuracy+=0.1;
 		}else if(CheckHitKey(key, 'l')){
 			accuracy-=0.1;
+		}else if(CheckHitKey(key, 'd')){
+			int index;
+			std::cout << "ピース番号->";
+			std::cin >> index;
+			Problem problem = toProbrem(contours);
+			//deproymenter(problem, index); 
 		}
 
 		//描画
@@ -294,3 +304,10 @@ void CaptureIO::Run(){
 	return;
 }
 
+void CaptureIO::SetSeacher(std::function<void(Problem)> seacher){
+	this->seacher = seacher;
+}
+
+void CaptureIO::SetDeproymenter(std::function<void(Problem, int)> deproymenter){
+	this->deproymenter = deproymenter;
+}
