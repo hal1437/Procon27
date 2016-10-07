@@ -1,5 +1,6 @@
 
 #pragma once 
+#include <search/BasicSearch.h>
 #include <structure/Matrix.hpp>
 #include <structure/Problem.h>
 #include <structure/Drawer.h>
@@ -12,21 +13,22 @@
 class Deproyment{
 public:
 	struct result{
+		int index;
 		TransParam trans;
 		double length_diff;   //線形誤差
 		double angle_sum[2]; //角度和
 	};
 private:
-	constexpr int LENGTH_EPS = 1.0e1;
-	constexpr int ANGLE_EPS  = 1.0e1;
-	Polygon base;//ベース
+	constexpr static double LENGTH_EPS = 1.0;
+	constexpr static double ANGLE_EPS  = 0;
 
-	double Length(const Polygon& p,int index);
+	double Length(const Polygon& p,int index,bool Rev=false);
 	double Angle (const Polygon& p,int index,bool Rev=false);
 
 	std::vector<result> Solver(std::vector<Polygon> list);
 
 public:
+	Polygon base;//ベース
 
 	//実行
 	void Run(std::vector<Polygon> list);
