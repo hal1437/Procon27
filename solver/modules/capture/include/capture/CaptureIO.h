@@ -18,6 +18,7 @@ private:
 	int limit_range = 50;
 	double accuracy = 3.0;
 	bool resource_mode;
+	double expansion = 1.0;
 
 	cv::VideoCapture cap;
 	cv::Mat origin, frame;
@@ -30,16 +31,16 @@ private:
 
 public:
 	void Run();
-	void Setup();
 	
 	CaptureIO(int device);
 	CaptureIO(std::string resource);
 
+	void Setup();
 	bool CheckHitKey(int key,char c);
+	void SetExpansion(double expansion);
 
 	cv::Mat Threshold(cv::Mat origin);
 	cv::Mat ColorGamut(cv::Mat origin);
-
 	std::vector<std::vector<cv::Point>> ContourApprox(cv::Mat origin);
 
 	Problem toProbrem(std::vector<std::vector<cv::Point>> approxes);
