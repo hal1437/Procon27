@@ -9,6 +9,7 @@
 
 bool CheckHitKey(int key,char c);
 void cvPointToPoint(cv::Point &cvpoint, Point &point);
+void my_mouse_callback(int event, int x, int y, int flags, void* param);
 
 
 int main(){
@@ -51,7 +52,7 @@ int main(){
 				 "==================================================\n"
 				 "=  q:exit               [:value1 up              =\n"
 				 "=  s:save               ]:value1 down            =\n"
-				 "=  t:threshold          @:value2 up              =\n"
+				 "=  m:mode change        @:value2 up              =\n"
 				 "=                       ::value2 down            =\n"
 				 "=                       p:limit_range up         =\n"
 				 "=                       ;:limit_range down       =\n"
@@ -107,12 +108,12 @@ int main(){
 		else if (mode == 1) {
 			//色域でフィルターをかける
 			cv::Mat d_filter(frame.rows, frame.cols, CV_8UC1);
-			for(int i=0; i < d_filter.cols; i++){
-				for(int j=0; j < d_filter.rows; j++){
-					if(ColorDistance(GetPixcel(frame, center_pos[0].y, center_pos[0].x), GetPixcel(frame, j,i)) < limit_range){
-						d_filter.at<unsigned char>(j, i) = 255;
+			for(int i=0; i < d_filter.rows; i++){
+				for(int j=0; j < d_filter.cols; j++){
+					if(ColorDistance(GetPixcel(frame, center_pos[0]), GetPixcel(frame, j,i)) < limit_range){
+						SetPixcel(d_filter, j, i, 255);
 					}else{
-						d_filter.at<unsigned char>(j, i) = 0;					
+						SetPixcel(d_filter, j, i, 0);
 					}
 				}
 			}
@@ -209,7 +210,7 @@ int main(){
 
 			//フレーム画像を保存する.
 			std::string filename;
-			Console::SetCursorPos(0,16);
+			Console::SetCursorPos(0,17);
 			std::cout << "ファイル名入力->";
 			std::cin  >> filename;
 
@@ -223,7 +224,7 @@ int main(){
 			}
 
 			key = -1;
-		}else if (CheckHitKey(key,'t')){
+		}else if (CheckHitKey(key,'m')){
 			//二値化
 			mode++;
 			mode %= 2;
@@ -288,3 +289,11 @@ void cvPointToPoint(cv::Point &cvpoint, Point &point){
 	point.y = cvpoint.y;
 }
 
+void my_mouse_callback(int event, int x, int y, int flags, void* param){
+   cv::Point *point = static_cast<cv::Point*>(param);
+
+   if(event == cv::EVENT_LBUTTONDOWN){
+   		point->x=x;
+		point->y=y;
+   	}
+}

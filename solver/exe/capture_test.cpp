@@ -11,6 +11,7 @@ const int FLIP_LR = 2;
 
 
 bool CheckHitKey(int key,char c);
+void my_mouse_callback(int event, int x, int y, int flags, void* param);
 
 
 int main(){
@@ -205,4 +206,13 @@ int main(){
 bool CheckHitKey(int key,char c){
 	return key == (c-'a' + 97);
 	//return key == (c-'a' + 1048673);
+}
+
+void my_mouse_callback(int event, int x, int y, int flags, void* param){
+   cv::Point *point = static_cast<cv::Point*>(param);
+
+   if(event == cv::EVENT_LBUTTONDOWN){
+   		point->x=x;
+		point->y=y;
+   	}
 }
