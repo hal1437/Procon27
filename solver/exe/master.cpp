@@ -12,13 +12,15 @@ void Deproy(Problem prob,int index);
 
 int main(int argc,char* argv[]){
 
-// 	int device = 0;
-// 	std::cout << "デバイス番号を入力>>";
-// 	std::cin >> device;
+	int device = 0;
+	std::cout << "デバイス番号を入力>>";
+	std::cin >> device;
 	
-	CaptureIO cap("../solver/resource/sample/Test1_origin.png");
+	CaptureIO cap(device);
 	cap.SetSeacher(Search);
 	cap.SetDeproymenter(Deproy);
+	cap.SetExpansion(0.5);
+	
 	cap.Run();
 }
 
@@ -49,5 +51,6 @@ void Search(Problem prob){
 	delete h;
 }
 void Deproy(Problem prob,int index){
+	for(Polygon& p :prob.pieces)p.normalize();
 	Deproyment().Run(prob,index);
 }
