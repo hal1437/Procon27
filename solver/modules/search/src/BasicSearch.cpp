@@ -89,7 +89,6 @@ std::vector<TransParam> BasicSearch::Listup(const Polygon& frame,int frame_index
 				}
 			}
 		}
-// 		std::cout << trans << std::endl;
 // 		std::cout << (is_over? "('A`)":"（　＾ω＾）") << std::endl;
 // // 		フレームを描画
 // 		cv::Mat screen = cv::Mat::zeros(600, 900, CV_8UC3);
@@ -105,8 +104,8 @@ std::vector<TransParam> BasicSearch::Listup(const Polygon& frame,int frame_index
 // // 		表示
 // 		cv::namedWindow("InstantViewer", CV_WINDOW_AUTOSIZE|CV_WINDOW_FREERATIO);
 // 		cv::imshow("InstantViewer", screen);
-// 		cv::waitKey(0);
-//
+// 		cv::waitKey(1);
+
 
 		//消えてもらおう
 		if(is_over == true){
