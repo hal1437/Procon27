@@ -6,6 +6,7 @@
 #include <opencv2/opencv.hpp>
 #include <util/BinaryIO.hpp>
 #include <random>
+#include <capture/MatIO.h>
 
 
 int main(){
@@ -18,26 +19,18 @@ int main(){
 	double cc = 0;
 	while (1){
 		cv::Mat img = cv::Mat::zeros(800, 800, CV_8UC3);
-		Polygon polygon;
-
-		p[1].x = 200*sin(cc) + p[0].x;
-		p[1].y = 200*cos(cc) + p[0].y;
-		p[2].x = 100*sin(cc*3) + p[1].x;
-		p[2].y = 100*cos(cc*3) + p[1].y;
-		p[3].x = 50 *sin(cc*5) + p[2].x;
-		p[3].y = 50 *cos(cc*5) + p[2].y;
-		p[4].x = 30 *sin(cc*10) + p[3].x;
-		p[4].y = 30 *cos(cc*10) + p[3].y;
+		cv::Vec3b pixcel;
 		
-		for(int i=0;i<5;i++){
-			polygon.addNode(p[i]);
-		}	
-		std::cout << polygon << std::endl;
-		img << polygon;
-		for(int i=0;i<5;i++){
-			DrawPoint(img,p[i],5,3,cv::Scalar(0,0,255),false);
+		for(int i=0; i<400; i++){
+			for(int j=0; j<400; j++){
+				SetPixcel(img, j, i, 0, 0, 255);
+			}
 		}
-		cc += 2*3.141592/200;
+
+		pixcel = GetPixcel(img, 100, 100);
+		
+		std::cout << (int)pixcel[0] << ", " << (int)pixcel[1] << ", " << (int)pixcel[2] << std::endl;
+		std::cout << ColorDistance(GetPixcel(img, 10, 10), GetPixcel(img, 700, 700)) << std::endl;
 
 
 		cv::namedWindow("drawing", CV_WINDOW_AUTOSIZE|CV_WINDOW_FREERATIO);

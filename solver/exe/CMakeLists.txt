@@ -13,12 +13,14 @@ message(STATUS "  graph")
 
 add_executable(opencv_test opencv_test.cpp)
 target_link_libraries(opencv_test structure)
+target_link_libraries(opencv_test capture)
 target_link_libraries(opencv_test ${OpenCV_LIBS})
 message(STATUS "  opencv_test")
 
 add_executable(capture_test capture_test.cpp)
 target_link_libraries(capture_test ${OpenCV_LIBS})
 target_link_libraries(capture_test util)
+target_link_libraries(capture_test capture)
 message(STATUS "  capture_test")
 
 if(TBB_FOUND)
@@ -42,6 +44,7 @@ add_executable(prototype prototype.cpp)
 target_link_libraries(prototype ${OpenCV_LIBS})
 target_link_libraries(prototype util)
 target_link_libraries(prototype structure)
+target_link_libraries(prototype capture)
 message(STATUS "  prototype")
 
 add_executable(sequence SequenceSearch.cpp)
