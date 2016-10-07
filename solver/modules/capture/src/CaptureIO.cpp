@@ -26,6 +26,10 @@ bool CaptureIO::CheckHitKey(int key,char c){
 	return key == (c-'a' + 97);
 }
 
+void CaptureIO::SetExpansion(double expansion){
+	this->expansion = expansion;	
+}
+
 cv::Mat CaptureIO::Threshold(cv::Mat origin){
 	cv::Mat gray, thre0, thre1, thre2 ;
 	//グレースケール
@@ -48,7 +52,10 @@ cv::Mat CaptureIO::ColorGamut(cv::Mat origin){
 	cv::Mat d_filter(origin.rows, origin.cols, CV_8UC1);
 	for(int i=0; i < d_filter.rows; i++){
 		for(int j=0; j < d_filter.cols; j++){
-			if(ColorDistance(GetPixcel(frame, center_pos[0]), GetPixcel(frame, j,i)) < limit_range){
+			if(ColorDistance(GetPixcel(frame, center_pos[0]), GetPixcel(frame, j,i)) < limit_range || 
+			   ColorDistance(GetPixcel(frame, center_pos[1]), GetPixcel(frame, j,i)) < limit_range || 
+			   ColorDistance(GetPixcel(frame, center_pos[2]), GetPixcel(frame, j,i)) < limit_range)
+			{
 				SetPixcel(d_filter, j, i, 255);
 			}else{
 				SetPixcel(d_filter, j, i, 0);
@@ -138,10 +145,16 @@ void CaptureIO::cvPointToPoint(cv::Point &cvpoint, Point &point){
 void my_mouse_callback(int event, int x, int y, int flags, void* param){
 	cv::Point *point = static_cast<cv::Point*>(param);
 
-   if(event == cv::EVENT_LBUTTONDOWN){
-   		point->x=x;
-		point->y=y;
-   	}
+	if(event == cv::EVENT_LBUTTONDOWN){
+		if(point[2] == cv::Point(0,0)){
+			point[2] = point[1] = point[0] = cv::Point(x, y);
+		}else{
+			point[2] = point[1];
+   			point[1] = point[0];
+   			point[0] = cv::Point(x, y);
+		}
+   		
+	}
 }
 
 void CaptureIO::Run(){
@@ -155,13 +168,13 @@ void CaptureIO::Run(){
 				 "==================================================\n"
 				 "=  q:exit               [:value1 up              =\n"
 				 "=  s:save               ]:value1 down            =\n"
-				 "=  m:mode change         @:value2 up              =\n"
+				 "=  m:mode change        @:value2 up              =\n"
 				 "=                       ::value2 down            =\n"
 				 "=  o:accuracy_up        p:limit_range up         =\n"
 				 "=  l:accuracy_down      ;:limit_range down       =\n"
 				 "==================================================\n"
 				 "=   Mode:               limit_range:             =\n"
-				 "= value1:                                        =\n"
+				 "= value1:               accuracy                 =\n"
 				 "= value2:                                        =\n"
 				 "=    key:                                        =\n"
 				 "=polygon:                                        =\n"
@@ -193,17 +206,16 @@ void CaptureIO::Run(){
 		while(1)//無限ループ
 	{	
 		//カメラ画像取得、サイズ変換
- 		if(device != -1)cap >> origin;
-		resize(origin,frame,cv::Point(), 1.5, 1.5);
-
-		cv::Mat thre = this->Threshold(frame); //二値化する
-		cv::Mat d_filter = this->ColorGamut(frame); //色域でフィルタ
+ 		if(!resource_mode)cap >> origin;
+		resize(origin,frame,cv::Point(), expansion, expansion);
 
 		//輪郭の座標リスト
 		std::vector<std::vector<cv::Point>> contours;
 		if(mode == 0){
+			cv::Mat d_filter = this->ColorGamut(frame); //色域でフィルタ
 			contours = this->ContourApprox(d_filter);
 		}else if(mode == 1){
+			cv::Mat thre = this->Threshold(frame); //二値化する
 			contours = this->ContourApprox(thre);
 		}
 
@@ -271,7 +283,7 @@ void CaptureIO::Run(){
 			std::cout << "ピース番号->";
 			std::cin >> index;
 			Problem problem = toProbrem(contours);
-			//deproymenter(problem, index); 
+			deproymenter(problem, index); 
 		}
 
 		//描画
