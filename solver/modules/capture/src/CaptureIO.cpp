@@ -283,7 +283,7 @@ void CaptureIO::Run(){
 			std::cout << "ピース番号->";
 			std::cin >> index;
 			Problem problem = toProbrem(contours);
-			//deproymenter(problem, index); 
+			deproymenter(problem, index); 
 		}
 
 		//描画
