@@ -3,7 +3,9 @@
 #include <structure/Point.hpp>
 #include <structure/Polygon.h>
 #include <util/Printable.h>
+#ifdef USE_ArrayFire
 #include <arrayfire.h>
+#endif
 #include <cmath>
 
 

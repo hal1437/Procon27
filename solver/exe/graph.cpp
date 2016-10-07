@@ -12,7 +12,9 @@
 
 int main(){
 
+#ifdef USE_ArrayFire
     af::info();
+#endif
 	std::cout << "---Graph Algorithm Test---" << std::endl;
 	
 
