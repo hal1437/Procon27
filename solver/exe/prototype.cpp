@@ -11,10 +11,10 @@
 
 int main(){
 	
-	//int device = 0;
-	//std::cout << "デバイス番号を入力>>";
-	//std::cin >> device;
-	CaptureIO cap("../solver/resource/sample/Test1_origin.png");
+	int device = 0;
+	std::cout << "デバイス番号を入力>>";
+	std::cin >> device;
+	CaptureIO cap(device);
 	cap.SetExpansion(1.5);
 	cap.Run();
 

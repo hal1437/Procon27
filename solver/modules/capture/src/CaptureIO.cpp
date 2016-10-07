@@ -77,7 +77,7 @@ std::vector<std::vector<cv::Point>> CaptureIO::ContourApprox(cv::Mat origin){
 		std::vector<cv::Point> approx;
 
 		//輪郭を直線近似する
-		cv::approxPolyDP(cv::Mat(*contour), approx, accuracy, true);
+		cv::approxPolyDP(cv::Mat(*contour), approx, accuracy * cv::arcLength(*contour,true), true);
 		if(approx.size() >= 3){
 			approxes.push_back(approx);
 			//近似した輪郭線を青で描画
@@ -213,9 +213,11 @@ void CaptureIO::Run(){
 		std::vector<std::vector<cv::Point>> contours;
 		if(mode == 0){
 			cv::Mat d_filter = this->ColorGamut(frame); //色域でフィルタ
+			cv::imshow("d_filter", d_filter);
 			contours = this->ContourApprox(d_filter);
 		}else if(mode == 1){
 			cv::Mat thre = this->Threshold(frame); //二値化する
+			cv::imshow("thre", thre);
 			contours = this->ContourApprox(thre);
 		}
 
@@ -275,9 +277,9 @@ void CaptureIO::Run(){
 		}else if(CheckHitKey(key, ';')){
 			limit_range--;
 		}else if(CheckHitKey(key, 'o')){
-			accuracy+=0.1;
+			accuracy+=0.01;
 		}else if(CheckHitKey(key, 'l')){
-			accuracy-=0.1;
+			accuracy-=0.01;
 		}else if(CheckHitKey(key, 'd')){
 			int index;
 			std::cout << "ピース番号->";
@@ -306,8 +308,6 @@ void CaptureIO::Run(){
 
 		std::cout << std::flush;
 
-		cv::imshow("window", frame);//画像を表示．
-		cv::imshow("window", frame);//画像を表示．
 		cv::imshow("window", frame);//画像を表示．
 
 		//cv::waitKey(0);

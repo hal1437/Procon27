@@ -16,7 +16,7 @@ private:
 	int value1 = 100;
 	int value2 =80;
 	int limit_range = 50;
-	double accuracy = 3.0;
+	double accuracy = 0.01;
 	bool resource_mode;
 	double expansion = 1.0;
 
