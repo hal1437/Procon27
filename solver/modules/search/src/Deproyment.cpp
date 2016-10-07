@@ -14,6 +14,14 @@ double Deproyment::Angle (const Polygon& p,int index,bool Rev){
 	if(Rev)return Point::getAngle2Vec(p.getNode(j_n)-p.getNode(index),p.getNode(j_p)-p.getNode(index));
 	else   return Point::getAngle2Vec(p.getNode(j_p)-p.getNode(index),p.getNode(j_n)-p.getNode(index));
 }
+double Deproyment::Angle2(const Polygon& p,int index,bool Rev){
+	int j_p  = (index+p.size()-1) % p.size();
+	int j_n  = (index+1         ) % p.size();
+	int j_pp = (index+p.size()-2) % p.size();
+	int j_nn = (index+2         ) % p.size();
+	if(Rev)return Point::getAngle2Vec(p.getNode(j_nn)-p.getNode(j_n),p.getNode(index)-p.getNode(j_n));
+	else   return Point::getAngle2Vec(p.getNode(index)-p.getNode(j_n),p.getNode(j_nn)-p.getNode(j_n));
+}
 
 std::vector<Deproyment::result> Deproyment::Solver(std::vector<Polygon> list){
 	std::vector<Deproyment::result>	 ans;
@@ -31,7 +39,7 @@ std::vector<Deproyment::result> Deproyment::Solver(std::vector<Polygon> list){
 					Polygon p = list[i];
 					if(rev)p = list[i].getReverse();
 					double length      = Length(list[i],j,rev);
-					double angle       = Angle (list[i],j,rev);
+					double angle       = Angle (list[i],j);
 					
 					//規定値以下
 					if(std::abs(base_length - length) < LENGTH_EPS ||
@@ -39,9 +47,8 @@ std::vector<Deproyment::result> Deproyment::Solver(std::vector<Polygon> list){
 					std::abs(base_angle + angle - M_PI * (2/2) ) < ANGLE_EPS ||
 					std::abs(base_angle + angle - M_PI * (3/2) ) < ANGLE_EPS ||
 					std::abs(base_angle + angle - M_PI * (4/2) ) < ANGLE_EPS){
-						Polygon p_re ;
-						if(rev==1)p_re = list[i];
-						else      p_re = list[i].getReverse();
+						Polygon p_re = list[i];
+						if(rev==0)p_re.reverse();
 						result res;
 						TransParam param;
 						param.sub_index = j;
@@ -57,7 +64,7 @@ std::vector<Deproyment::result> Deproyment::Solver(std::vector<Polygon> list){
 						res.trans = param;
 						res.length_diff = std::abs(length - base_length);
 						res.angle_sum[0] = angle + base_angle;
-						res.angle_sum[1] = 0;
+						res.angle_sum[1] = Angle2(base,k) + Angle2(list[i],j);
 						res.index = i;
 						ans.push_back(res);
 					}
@@ -85,17 +92,24 @@ void Deproyment::Run(std::vector<Polygon> list){
 	while(1){
 		cv::Mat img = cv::Mat::zeros(600, 800, CV_8UC3);
 		
-		//ベースライン
-		Point frame_offset(400,200);
+		//ベースポリゴン
+		Point base_offset(400,200);
 		for(int i=0;i<base.size();i++){
-			Point p1 = base.getNode(i)+frame_offset;
-			Point p2 = base.getNode((i+1) % base.size())+frame_offset;
+			Point p1 = base.getNode(i)                  +base_offset;
+			Point p2 = base.getNode((i+1) % base.size())+base_offset;
 			cv::line(img, cv::Point(p1.x, p1.y), cv::Point(p2.x, p2.y), cv::Scalar(0,(i+1)*30,255), 1, CV_AA); 
 		}
 
-// 		img << base * cMat::MakeMoveMatrix(400,200);
-		img << list[res[index].index] * cMat::MakeMoveMatrix(600,200);
+		//配置位置を表示
 		img << BasicSearch::Transform(list[res[index].index],res[index].trans)*cMat::MakeMoveMatrix(400,200);
+		
+		//オリジナル
+		img << list[res[index].index] * cMat::MakeMoveMatrix(100,200);
+		
+		//角度評価点を描画
+		Point center = res[index].trans.pos + base_offset;
+		cv::circle(img,cv::Point(center.x,center.y),6,cv::Scalar(0,0,255));
+
 		putText(img,std::string("Length:") + std::to_string(res[index].length_diff          ),cv::Point(0,20),cv::FONT_HERSHEY_SIMPLEX,0.6,cv::Scalar(255,255,255));
 		putText(img,std::string("Angle0:") + std::to_string(res[index].angle_sum[0]*180/M_PI),cv::Point(0,40),cv::FONT_HERSHEY_SIMPLEX,0.6,cv::Scalar(255,255,255));
 		putText(img,std::string("Angle1:") + std::to_string(res[index].angle_sum[1]*180/M_PI),cv::Point(0,60),cv::FONT_HERSHEY_SIMPLEX,0.6,cv::Scalar(255,255,255));

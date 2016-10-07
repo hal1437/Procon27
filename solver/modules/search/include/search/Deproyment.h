@@ -24,6 +24,7 @@ private:
 
 	double Length(const Polygon& p,int index,bool Rev=false);
 	double Angle (const Polygon& p,int index,bool Rev=false);
+	double Angle2(const Polygon& p,int index,bool Rev=false);
 
 	std::vector<result> Solver(std::vector<Polygon> list);
 

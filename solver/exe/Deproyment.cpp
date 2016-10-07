@@ -16,7 +16,9 @@ int main(int argc,char* argv[]){
 		p.normalize();
 	}
 	Deproyment dep;
+	
+	std::shuffle(prob.pieces.begin(), prob.pieces.end(), std::mt19937());
 	dep.base = prob.pieces[0];
-// 	prob.pieces.erase(prob.pieces.begin());
+	prob.pieces.erase(prob.pieces.begin());
 	dep.Run(prob.pieces);
 }
