@@ -77,6 +77,15 @@ std::vector<Deproyment::result> Deproyment::Solver(std::vector<Polygon> list){
 }
 
 
+void Deproyment::Run(Problem prob,int index){
+	if(index == -1){
+		base = prob.frame;
+	}else{
+		base = prob.pieces[index];
+		prob.pieces.erase(prob.pieces.begin()+index);
+	}
+	Run(prob.pieces);
+}
 
 void Deproyment::Run(std::vector<Polygon> list){
 

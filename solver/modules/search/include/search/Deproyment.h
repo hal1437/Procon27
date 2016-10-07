@@ -32,5 +32,6 @@ public:
 	Polygon base;//ベース
 
 	//実行
+	void Run(Problem prob,int index);
 	void Run(std::vector<Polygon> list);
 };
