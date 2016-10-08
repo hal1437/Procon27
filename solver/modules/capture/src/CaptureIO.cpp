@@ -262,6 +262,7 @@ void CaptureIO::Run(){
 */
 		}else if(CheckHitKey(key, 'f')){
 			toProbrem(problem, contours, true);
+		}else if(CheckHitKey(key, 'r')){
 			seacher(problem);
 		}else if (CheckHitKey(key,'m')){
 			//二値化
