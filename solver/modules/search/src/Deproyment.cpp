@@ -129,10 +129,11 @@ void Deproyment::Run(std::vector<Polygon> list){
 		if(key == 63234 || key == 65361)index--;  //左矢印キー
 		if(key == 63235 || key == 65363)index++;  //右矢印キー
 		if(key == 63235 || key == 65363)index++;  //右矢印キー
-		if((key == 'q' -'a' + 97) break;
+		if(key == 'q' -'a' + 97) break;
 		index = std::max(0         ,index);
 		index = std::min(static_cast<int>(res.size())-1,index);
 	}
+	cv::destroyWindow("Deproyment");
 	std::cout << "======================= END =========================" << std::endl;
 
 }
