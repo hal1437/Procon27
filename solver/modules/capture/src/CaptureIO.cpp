@@ -228,8 +228,9 @@ void CaptureIO::Run(){
 
 
 		//キー取得
+		bool neutral = true;
 		int key = cv::waitKey(1);
-		
+
 		if(CheckHitKey(key,'q')){
 			//whileループから抜ける．
 			break;
@@ -303,6 +304,21 @@ void CaptureIO::Run(){
 			if(ans == "y" || ans == "Y"){
 				problem.pieces.clear();
 			}
+		}else if(CheckHitKey(key , 'a')){
+			//フレーム画像を保存する.
+			std::string filename;
+			Console::SetCursorPos(0,17);
+			std::cout << "ファイル名入力->";
+			std::cin  >> filename;
+
+
+			if(filename + ".png" != resource){
+				cv::imwrite(filename + ".png", frame);
+				cv::imwrite(filename + "_origin.png", origin);
+				std::cout << "セーブ完了[" << filename << ".png][" << filename << "_origin.png]" << std::endl;
+			}else{
+				std::cout << "上書きは勘弁して" << std::endl;
+			}			
 		}
 
 		//描画
