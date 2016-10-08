@@ -151,6 +151,9 @@ void InstantViewer::View(){
 		if(current >= problem.pieces.size())current = problem.pieces.size()-1;
 		
 	}
+	cv::destroyWindow("InstantViewer");
+
+
 
 }
 

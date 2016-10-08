@@ -133,6 +133,7 @@ void Deproyment::Run(std::vector<Polygon> list){
 		index = std::max(0         ,index);
 		index = std::min(static_cast<int>(res.size())-1,index);
 	}
+	cv::destroyWindow("Deproyment");
 	std::cout << "======================= END =========================" << std::endl;
 
 }
