@@ -292,7 +292,8 @@ void CaptureIO::Run(){
 			int index;
 			std::cout << "ピース番号->";
 			std::cin >> index;
-			Problem problem = toProbrem(contours);
+			Problem problem;
+			toProbrem(problem, contours);
 			deproymenter(problem, index); 
 		}else if(CheckHitKey(key, 'c')){
 			std::string ans;
