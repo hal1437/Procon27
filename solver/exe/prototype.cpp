@@ -15,6 +15,7 @@ int main(){
 	std::cout << "デバイス番号を入力>>";
 	std::cin >> device;
 	CaptureIO cap(device);
+//	CaptureIO cap("../solver/resource/sample/Test1_origin.png");
 	cap.SetExpansion(1.5);
 	cap.Run();
 

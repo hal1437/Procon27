@@ -161,6 +161,8 @@ void CaptureIO::Run(){
 
 	cv::setMouseCallback("window", my_mouse_callback, (void*)center_pos);
 	
+	Problem problem;
+
 	Console::ClearScreen(0);
 	Console::SetCursorPos(0,0);
 	std::string frame_str;
@@ -170,12 +172,12 @@ void CaptureIO::Run(){
 				 "=  q:exit               [:value1 up              =\n"
 				 "=  s:save               ]:value1 down            =\n"
 				 "=  m:mode change        @:value2 up              =\n"
-				 "=                       ::value2 down            =\n"
+				 "=  c:pieces clear       ::value2 down            =\n"
 				 "=  o:accuracy_up        p:limit_range up         =\n"
 				 "=  l:accuracy_down      ;:limit_range down       =\n"
 				 "==================================================\n"
 				 "=   Mode:               limit_range:             =\n"
-				 "= value1:               accuracy                 =\n"
+				 "= value1:                  accuracy:             =\n"
 				 "= value2:                                        =\n"
 				 "=    key:                                        =\n"
 				 "=polygon:                                        =\n"
@@ -216,10 +218,12 @@ void CaptureIO::Run(){
 			cv::Mat d_filter = this->ColorGamut(frame); //色域でフィルタ
 			cv::imshow("d_filter", d_filter);
 			contours = this->ContourApprox(d_filter);
+			cv::destroyWindow("thre");
 		}else if(mode == 1){
 			cv::Mat thre = this->Threshold(frame); //二値化する
 			cv::imshow("thre", thre);
 			contours = this->ContourApprox(thre);
+			cv::destroyWindow("d_filter");
 		}
 
 
@@ -232,8 +236,13 @@ void CaptureIO::Run(){
 		}
 		else if(CheckHitKey(key,'s')){
 
-			Problem problem = toProbrem(contours);
-			seacher(problem);
+			problem = toProbrem(contours);
+			std::string ans;
+			std::cout << "撮影終了?(Y/N)->";
+			std::cin >> ans;
+			if(ans == "y" || ans == "Y"){
+				seacher(problem);
+			}
 /*
 			//ピースの頂点情報の出力.
 			std::ofstream ofs("polygon_out.txt");
@@ -287,6 +296,13 @@ void CaptureIO::Run(){
 			std::cin >> index;
 			Problem problem = toProbrem(contours);
 			deproymenter(problem, index); 
+		}else if(CheckHitKey(key, 'c')){
+			std::string ans;
+			std::cout << "ピースを消去しますか?(Y/N)->";
+			std::cin >> ans;
+			if(ans == "y" || ans == "Y"){
+				problem.pieces.clear();
+			}
 		}
 
 		//描画
