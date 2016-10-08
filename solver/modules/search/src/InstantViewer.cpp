@@ -146,6 +146,7 @@ void InstantViewer::View(){
 		if(key == 63234 || key == 65361)current--;  //左矢印キー
 		if(key == 63235 || key == 65363)current++;  //右矢印キー
 		if(key == 27   )break;      //Escキー
+		if((key == 'q' -'a' + 97) break;
 		if(current  < 0                    )current = 0;
 		if(current >= problem.pieces.size())current = problem.pieces.size()-1;
 		
