@@ -89,9 +89,8 @@ std::vector<std::vector<cv::Point>> CaptureIO::ContourApprox(cv::Mat origin){
 	return approxes;
 }
 
-Problem CaptureIO::toProbrem(std::vector<std::vector<cv::Point>> approxes){
+void CaptureIO::toProbrem(Problem &problem, std::vector<std::vector<cv::Point>> approxes){
 	//Problem型に変換
-	Problem problem;
 	std::string ans;
 	std::cout << "フレームあり?(Y/N)->";
 	std::cin >> ans;
@@ -133,8 +132,6 @@ Problem CaptureIO::toProbrem(std::vector<std::vector<cv::Point>> approxes){
 		problem.pieces.push_back(polygon);
 		
 	}
-
-	return problem;
 }
 
 void CaptureIO::cvPointToPoint(cv::Point &cvpoint, Point &point){
@@ -237,7 +234,7 @@ void CaptureIO::Run(){
 		}
 		else if(CheckHitKey(key,'s')){
 
-			problem = toProbrem(contours);
+			toProbrem(problem, contours);
 			std::string ans;
 			std::cout << "撮影終了?(Y/N)->";
 			std::cin >> ans;

@@ -43,7 +43,7 @@ public:
 	cv::Mat ColorGamut(cv::Mat origin);
 	std::vector<std::vector<cv::Point>> ContourApprox(cv::Mat origin);
 
-	Problem toProbrem(std::vector<std::vector<cv::Point>> approxes);
+	void toProbrem(Problem &problem, std::vector<std::vector<cv::Point>> approxes);
 	void cvPointToPoint(cv::Point &cvpoint, Point &point);
 	//static void my_mouse_callback(int event, int x, int y, int flags, void* param);
 
