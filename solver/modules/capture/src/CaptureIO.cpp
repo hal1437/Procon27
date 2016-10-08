@@ -89,9 +89,8 @@ std::vector<std::vector<cv::Point>> CaptureIO::ContourApprox(cv::Mat origin){
 	return approxes;
 }
 
-Problem CaptureIO::toProbrem(std::vector<std::vector<cv::Point>> approxes){
+void CaptureIO::toProbrem(Problem &problem, std::vector<std::vector<cv::Point>> approxes){
 	//Problem型に変換
-	Problem problem;
 	std::string ans;
 	std::cout << "フレームあり?(Y/N)->";
 	std::cin >> ans;
@@ -121,7 +120,6 @@ Problem CaptureIO::toProbrem(std::vector<std::vector<cv::Point>> approxes){
 			approxes.erase(max_area_contour);
 		}
 	}
-	problem.pieces.erase(problem.pieces.begin(),problem.pieces.end());
 	for(auto approx = approxes.begin(); approx != approxes.end(); approx++){
 		//Polygonに変換
 		Polygon polygon;
@@ -133,8 +131,6 @@ Problem CaptureIO::toProbrem(std::vector<std::vector<cv::Point>> approxes){
 		problem.pieces.push_back(polygon);
 		
 	}
-
-	return problem;
 }
 
 void CaptureIO::cvPointToPoint(cv::Point &cvpoint, Point &point){
@@ -178,7 +174,7 @@ void CaptureIO::Run(){
 				 "==================================================\n"
 				 "=   Mode:               limit_range:             =\n"
 				 "= value1:                  accuracy:             =\n"
-				 "= value2:                                        =\n"
+				 "= value2:                    pieces:             =\n"
 				 "=    key:                                        =\n"
 				 "=polygon:                                        =\n"
 				 "==================================================\n"
@@ -237,7 +233,7 @@ void CaptureIO::Run(){
 		}
 		else if(CheckHitKey(key,'s')){
 
-			problem = toProbrem(contours);
+			toProbrem(problem, contours);
 			std::string ans;
 			std::cout << "撮影終了?(Y/N)->";
 			std::cin >> ans;
@@ -295,7 +291,8 @@ void CaptureIO::Run(){
 			int index;
 			std::cout << "ピース番号->";
 			std::cin >> index;
-			Problem problem = toProbrem(contours);
+			Problem problem;
+			toProbrem(problem, contours);
 			deproymenter(problem, index); 
 		}else if(CheckHitKey(key, 'c')){
 			std::string ans;
@@ -338,8 +335,9 @@ void CaptureIO::Run(){
 		std::cout << limit_range << "   ";
 		Console::SetCursorPos(37,12);
 		std::cout << accuracy << "   ";
+		Console::SetCursorPos(37,13);
+		std::cout << problem.pieces.size() << "     ";
 		Console::SetCursorPos(0,25);
-
 
 		std::cout << std::flush;
 
