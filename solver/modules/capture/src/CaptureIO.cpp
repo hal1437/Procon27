@@ -163,7 +163,8 @@ void CaptureIO::Run(){
 	
 	Console::ClearScreen(0);
 	Console::SetCursorPos(0,0);
-	std::cout << "==================================================\n"
+	std::string frame_str;
+	frame_str = "==================================================\n"
 				 "=                   PROTOTYPE                    =\n"
 				 "==================================================\n"
 				 "=  q:exit               [:value1 up              =\n"
@@ -289,6 +290,8 @@ void CaptureIO::Run(){
 		}
 
 		//描画
+		Console::SetCursorPos(0,0);
+		std::cout << frame_str;
 		Console::SetCursorPos(10,11);
 		std::cout << mode << "   ";
 		Console::SetCursorPos(10,12);
