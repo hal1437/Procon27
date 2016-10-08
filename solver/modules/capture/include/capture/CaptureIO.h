@@ -17,6 +17,7 @@ private:
 	int value2 =80;
 	int limit_range = 50;
 	double accuracy = 0.01;
+	double area = 100.0;
 	bool resource_mode;
 	double expansion = 1.0;
 
@@ -43,9 +44,8 @@ public:
 	cv::Mat ColorGamut(cv::Mat origin);
 	std::vector<std::vector<cv::Point>> ContourApprox(cv::Mat origin);
 
-	void toProbrem(Problem &problem, std::vector<std::vector<cv::Point>> approxes);
+	void toProbrem(Problem &problem, std::vector<std::vector<cv::Point>> approxes, bool isframe);
 	void cvPointToPoint(cv::Point &cvpoint, Point &point);
-	//static void my_mouse_callback(int event, int x, int y, int flags, void* param);
 
 	void SetSeacher(std::function<void(Problem)> seacher);
 	void SetDeproymenter(std::function<void(Problem, int)> deproymenter);

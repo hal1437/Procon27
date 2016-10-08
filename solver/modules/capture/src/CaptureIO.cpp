@@ -78,7 +78,7 @@ std::vector<std::vector<cv::Point>> CaptureIO::ContourApprox(cv::Mat origin){
 
 		//輪郭を直線近似する
 		cv::approxPolyDP(cv::Mat(*contour), approx, accuracy * cv::arcLength(*contour,true), true);
-		if(approx.size() >= 3){
+		if(approx.size() >= 3 && contourArea(approx) > area){
 			approxes.push_back(approx);
 			//近似した輪郭線を青で描画
 			cv::polylines(frame, approx, true, cv::Scalar(255, 0, 0));
@@ -89,12 +89,9 @@ std::vector<std::vector<cv::Point>> CaptureIO::ContourApprox(cv::Mat origin){
 	return approxes;
 }
 
-void CaptureIO::toProbrem(Problem &problem, std::vector<std::vector<cv::Point>> approxes){
+void CaptureIO::toProbrem(Problem &problem, std::vector<std::vector<cv::Point>> approxes, bool isframe){
 	//Problem型に変換
-	std::string ans;
-	std::cout << "フレームあり?(Y/N)->";
-	std::cin >> ans;
-	if(ans == "y" || ans == "Y"){
+	if(isframe){
 		double max_area;
 		auto max_area_contour = approxes.begin();
 		for(int i = 0; i < 2; i++){
@@ -162,21 +159,21 @@ void CaptureIO::Run(){
 	Console::ClearScreen(0);
 	Console::SetCursorPos(0,0);
 	std::string frame_str;
-	frame_str = "==================================================\n"
+	frame_str =	"==================================================\n"
 				 "=                   PROTOTYPE                    =\n"
 				 "==================================================\n"
-				 "=  q:exit               [:value1 up              =\n"
-				 "=  s:save               ]:value1 down            =\n"
-				 "=  m:mode change        @:value2 up              =\n"
-				 "=  c:pieces clear       ::value2 down            =\n"
-				 "=  o:accuracy_up        p:limit_range up         =\n"
-				 "=  l:accuracy_down      ;:limit_range down       =\n"
+				 "=  q:exit                  p:limit_range up      =\n"
+				 "=  m:mode change           ;:limit_range down    =\n"
+				 "=  s:add pieces            o:accuracy_up         =\n"
+				 "=  c:pieces clear          l:accuracy_down       =\n"
+				 "=  f:add frame             i:area_up             =\n"
+				 "=       & seach start      k:area_down           =\n"
 				 "==================================================\n"
-				 "=   Mode:               limit_range:             =\n"
-				 "= value1:                  accuracy:             =\n"
-				 "= value2:                    pieces:             =\n"
-				 "=    key:                                        =\n"
-				 "=polygon:                                        =\n"
+				 "=    Mode:              limit_range:             =\n"
+				 "=     key:                 accuracy:             =\n"
+				 "= polygon:                     area:             =\n"
+				 "=  pieces:                                       =\n"
+				 "=                                                =\n"
 				 "==================================================\n"
 				 "=LOG                                              \n"
 				 "                                                  \n"
@@ -202,7 +199,7 @@ void CaptureIO::Run(){
 
 	}
 
-		while(1)//無限ループ
+	while(1)//無限ループ
 	{	
 		//カメラ画像取得、サイズ変換
  		if(!resource_mode)cap >> origin;
@@ -233,13 +230,13 @@ void CaptureIO::Run(){
 		}
 		else if(CheckHitKey(key,'s')){
 
-			toProbrem(problem, contours);
-			std::string ans;
-			std::cout << "撮影終了?(Y/N)->";
-			std::cin >> ans;
-			if(ans == "y" || ans == "Y"){
-				seacher(problem);
-			}
+			toProbrem(problem, contours, false);
+			//std::string ans;
+			//std::cout << "撮影終了?(Y/N)->";
+			//std::cin >> ans;
+			//if(ans == "y" || ans == "Y"){
+			//	seacher(problem);
+			//}
 /*
 			//ピースの頂点情報の出力.
 			std::ofstream ofs("polygon_out.txt");
@@ -263,6 +260,9 @@ void CaptureIO::Run(){
 				std::cout << "上書きは勘弁して" << std::endl;
 			}
 */
+		}else if(CheckHitKey(key, 'f')){
+			toProbrem(problem, contours, true);
+			seacher(problem);
 		}else if (CheckHitKey(key,'m')){
 			//二値化
 			mode++;
@@ -284,15 +284,26 @@ void CaptureIO::Run(){
 		}else if(CheckHitKey(key, ';')){
 			limit_range--;
 		}else if(CheckHitKey(key, 'o')){
-			accuracy+=0.01;
+			accuracy+=0.001;
 		}else if(CheckHitKey(key, 'l')){
-			accuracy-=0.01;
+			accuracy-=0.001;
+		}else if(CheckHitKey(key, 'i')){
+			area += 0.1;
+		}else if(CheckHitKey(key, 'k')){
+			area -= 0.1;
 		}else if(CheckHitKey(key, 'd')){
 			int index;
+			std::string ans;
+			Problem problem;
 			std::cout << "ピース番号->";
 			std::cin >> index;
-			Problem problem;
-			toProbrem(problem, contours);
+			std::cout << "フレームあり?(Y/N)->";
+			std::cin >> ans;
+			if(ans == "y" || ans == "Y"){
+				toProbrem(problem, contours, true);
+			}else{
+				toProbrem(problem, contours, false);
+			}
 			deproymenter(problem, index); 
 		}else if(CheckHitKey(key, 'c')){
 			std::string ans;
@@ -321,22 +332,20 @@ void CaptureIO::Run(){
 		//描画
 		Console::SetCursorPos(0,0);
 		std::cout << frame_str;
-		Console::SetCursorPos(10,11);
+		Console::SetCursorPos(11,11);
 		std::cout << mode << "   ";
-		Console::SetCursorPos(10,12);
-		std::cout << value1 << "   ";
-		Console::SetCursorPos(10,13);
-		std::cout << value2 << "   ";
-		Console::SetCursorPos(10,14);
-		std::cout << key << "      ";
-		Console::SetCursorPos(10, 15);
-		std::cout << contours.size() <<"   ";
+		Console::SetCursorPos(11,12);
+		std::cout << key << "   ";
+		Console::SetCursorPos(11,13);
+		std::cout << contours.size() << "   ";
+		Console::SetCursorPos(11,14);
+		std::cout << problem.pieces.size() << "      ";
 		Console::SetCursorPos(37,11);
 		std::cout << limit_range << "   ";
 		Console::SetCursorPos(37,12);
 		std::cout << accuracy << "   ";
 		Console::SetCursorPos(37,13);
-		std::cout << problem.pieces.size() << "     ";
+		std::cout << area << "   ";
 		Console::SetCursorPos(0,25);
 
 		std::cout << std::flush;
