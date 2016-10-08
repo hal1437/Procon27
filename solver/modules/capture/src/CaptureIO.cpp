@@ -167,7 +167,7 @@ void CaptureIO::Run(){
 				 "=  s:add pieces            o:accuracy_up         =\n"
 				 "=  c:pieces clear          l:accuracy_down       =\n"
 				 "=  f:add frame             i:area_up             =\n"
-				 "=       & seach start      k:area_down           =\n"
+				 "=  r:run_search            k:area_down           =\n"
 				 "==================================================\n"
 				 "=    Mode:              limit_range:             =\n"
 				 "=     key:                 accuracy:             =\n"
