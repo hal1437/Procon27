@@ -120,7 +120,6 @@ void CaptureIO::toProbrem(Problem &problem, std::vector<std::vector<cv::Point>> 
 			approxes.erase(max_area_contour);
 		}
 	}
-	problem.pieces.erase(problem.pieces.begin(),problem.pieces.end());
 	for(auto approx = approxes.begin(); approx != approxes.end(); approx++){
 		//Polygonに変換
 		Polygon polygon;
@@ -175,7 +174,7 @@ void CaptureIO::Run(){
 				 "==================================================\n"
 				 "=   Mode:               limit_range:             =\n"
 				 "= value1:                  accuracy:             =\n"
-				 "= value2:                                        =\n"
+				 "= value2:                    pieces:             =\n"
 				 "=    key:                                        =\n"
 				 "=polygon:                                        =\n"
 				 "==================================================\n"
@@ -336,8 +335,9 @@ void CaptureIO::Run(){
 		std::cout << limit_range << "   ";
 		Console::SetCursorPos(37,12);
 		std::cout << accuracy << "   ";
+		Console::SetCursorPos(37,13);
+		std::cout << problem.pieces.size() << "     ";
 		Console::SetCursorPos(0,25);
-
 
 		std::cout << std::flush;
 
