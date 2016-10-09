@@ -13,15 +13,15 @@ void ShowProblem(Problem prob);
 
 int main(int argc,char* argv[]){
 
-// 	int device = 0;
-// 	std::cout << "デバイス番号を入力>>";
-// 	std::cin >> device;
-//
-// 	CaptureIO cap(device);
-	CaptureIO cap("../solver/resource/sample/Test1_origin.png");
+ 	int device = 0;
+ 	std::cout << "デバイス番号を入力>>";
+ 	std::cin >> device;
+
+ 	CaptureIO cap(device);
+//	CaptureIO cap("../solver/resource/sample/Test1_origin.png");
 	cap.SetSeacher(Search);
 	cap.SetDeproymenter(Deproy);
-	cap.SetExpansion(1.0);
+	cap.SetExpansion(1.5);
 	
 	cap.Run();
 }

@@ -236,6 +236,7 @@ void CaptureIO::Run(){
 		else if(CheckHitKey(key,'s')){
 
 			toProbrem(problem, contours, false);
+			cv::waitKey(1000);
 			//std::string ans;
 			//std::cout << "撮影終了?(Y/N)->";
 			//std::cin >> ans;
@@ -267,6 +268,7 @@ void CaptureIO::Run(){
 */
 		}else if(CheckHitKey(key, 'f')){
 			toProbrem(problem, contours, true);
+			cv::waitKey(1000);
 		}else if(CheckHitKey(key, 'r')){
 			seacher(problem);
 		}else if (CheckHitKey(key,'m')){
