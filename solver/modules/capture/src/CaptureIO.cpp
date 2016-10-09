@@ -1,9 +1,9 @@
 #include <CaptureIO.h>
 
 void CaptureIO::Setup(){
-	for(int i = 0; i < 3; i++){
-		center_pos[i] = cv::Point(0,0);
-	}
+	center_color[0] = cv::Vec3b(0,0,0);
+	center_color[1] = cv::Vec3b(128,128,128);
+	center_color[1] = cv::Vec3b(255,255,255);
 
 	seacher = [](Problem){return;};
 	deproymenter = [](Problem, int){return;};
@@ -20,6 +20,10 @@ CaptureIO::CaptureIO(std::string resource){
 	Setup();
 	this->resource = resource;
 	this->resource_mode = true;
+}
+
+cv::Mat CaptureIO::GetFrame(){
+	return frame;
 }
 
 bool CaptureIO::CheckHitKey(int key,char c){
@@ -52,9 +56,9 @@ cv::Mat CaptureIO::ColorGamut(cv::Mat origin){
 	cv::Mat d_filter(origin.rows, origin.cols, CV_8UC1);
 	for(int i=0; i < d_filter.rows; i++){
 		for(int j=0; j < d_filter.cols; j++){
-			if(ColorDistance(GetPixcel(frame, center_pos[0]), GetPixcel(frame, j,i)) < limit_range || 
-			   ColorDistance(GetPixcel(frame, center_pos[1]), GetPixcel(frame, j,i)) < limit_range || 
-			   ColorDistance(GetPixcel(frame, center_pos[2]), GetPixcel(frame, j,i)) < limit_range)
+			if(ColorDistance(center_color[0], GetPixcel(frame, j,i)) < limit_range || 
+			   ColorDistance(center_color[1], GetPixcel(frame, j,i)) < limit_range || 
+			   ColorDistance(center_color[2], GetPixcel(frame, j,i)) < limit_range)
 			{
 				SetPixcel(d_filter, j, i, 255);
 			}else{
@@ -77,7 +81,7 @@ std::vector<std::vector<cv::Point>> CaptureIO::ContourApprox(cv::Mat origin){
 		std::vector<cv::Point> approx;
 
 		//輪郭を直線近似する
-		cv::approxPolyDP(cv::Mat(*contour), approx, accuracy * cv::arcLength(*contour,true), true);
+		cv::approxPolyDP(cv::Mat(*contour), approx, accuracy/* * cv::arcLength(*contour,true)*/, true);
 		if(approx.size() >= 3 && contourArea(approx) > area){
 			approxes.push_back(approx);
 			//近似した輪郭線を青で描画
@@ -136,15 +140,16 @@ void CaptureIO::cvPointToPoint(cv::Point &cvpoint, Point &point){
 }
 
 void my_mouse_callback(int event, int x, int y, int flags, void* param){
-	cv::Point *point = static_cast<cv::Point*>(param);
+	CaptureIO *cap_tmp = static_cast<CaptureIO*>(param);
 
 	if(event == cv::EVENT_LBUTTONDOWN){
-		if(point[2] == cv::Point(0,0)){
-			point[2] = point[1] = point[0] = cv::Point(x, y);
+		cv::Mat frame_tmp = cap_tmp->GetFrame();
+		if(cap_tmp->center_color[0]==cv::Vec3b(0,0,0) && cap_tmp->center_color[1]==cv::Vec3b(128,128,128) && cap_tmp->center_color[2]==cv::Vec3b(255,255,255)){
+			cap_tmp->center_color[2] = cap_tmp->center_color[1] = cap_tmp->center_color[0] = GetPixcel(frame_tmp, x, y);
 		}else{
-			point[2] = point[1];
-   			point[1] = point[0];
-   			point[0] = cv::Point(x, y);
+			cap_tmp->center_color[2] = cap_tmp->center_color[1];
+   			cap_tmp->center_color[1] = cap_tmp->center_color[0];
+   			cap_tmp->center_color[0] =  GetPixcel(frame_tmp, x, y);
 		}
    		
 	}
@@ -152,7 +157,7 @@ void my_mouse_callback(int event, int x, int y, int flags, void* param){
 
 void CaptureIO::Run(){
 
-	cv::setMouseCallback("window", my_mouse_callback, (void*)center_pos);
+	cv::setMouseCallback("window", my_mouse_callback, (void*)this);
 	
 	Problem problem;
 
@@ -285,9 +290,9 @@ void CaptureIO::Run(){
 		}else if(CheckHitKey(key, ';')){
 			limit_range--;
 		}else if(CheckHitKey(key, 'o')){
-			accuracy+=0.001;
+			accuracy+=0.1;
 		}else if(CheckHitKey(key, 'l')){
-			accuracy-=0.001;
+			accuracy-=0.1;
 		}else if(CheckHitKey(key, 'i')){
 			area += 0.1;
 		}else if(CheckHitKey(key, 'k')){

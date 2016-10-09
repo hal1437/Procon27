@@ -16,7 +16,7 @@ private:
 	int value1 = 100;
 	int value2 =80;
 	int limit_range = 50;
-	double accuracy = 0.01;
+	double accuracy = 3.0;
 	double area = 100.0;
 	bool resource_mode;
 	double expansion = 1.0;
@@ -25,12 +25,13 @@ private:
 	cv::Mat origin, frame;
 	std::string resource;
 	//Problem problem;
-	cv::Point center_pos[3];
 
 	std::function<void(Problem)> seacher;
 	std::function<void(Problem, int)> deproymenter;
 
 public:
+	cv::Vec3b center_color[3];
+
 	void Run();
 	
 	CaptureIO(int device);
@@ -49,4 +50,6 @@ public:
 
 	void SetSeacher(std::function<void(Problem)> seacher);
 	void SetDeproymenter(std::function<void(Problem, int)> deproymenter);
+
+	cv::Mat GetFrame();
 };
