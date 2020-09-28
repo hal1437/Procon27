@@ -29,7 +29,5 @@ make
 bin/master
 ```
 
----
 
-その他不明な点があれば@hal1437(halstroemeria@gmail.com)まで
 
